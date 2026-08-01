@@ -42,13 +42,19 @@
       </div>
     </div>
 
-    <canvas
-      id="game"
-      width="800"
-      height="600"
-      style="border: 1px solid black; background-color: #4b5563"
-    >
-    </canvas>
+    <div style="display: flex; gap: 20px">
+      <canvas
+        id="game"
+        width="600"
+        height="400"
+        style="border: 1px solid black; background-color: #4b5563"
+      ></canvas>
+
+      <div id="presence">
+        <h3>Connected Users</h3>
+        <ul id="user-list" style="list-style: none; padding: 0; margin: 0"></ul>
+      </div>
+    </div>
 
     <script>
       setLoggedInState(false);
@@ -61,6 +67,7 @@
       let myActor = null;
 
       function draw() {
+        console.log("users", actors)
         // Clear old frame
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -80,7 +87,7 @@
 
           // Actor label
           ctx.fillText(
-            actor.id === myActorId ? "YOU" : actor.id.substring(0, 4),
+            actor.user.name,
             actor.x,
             actor.y - 5,
           );
@@ -247,6 +254,10 @@
             actors.delete(message.id);
             draw();
             break;
+
+          case "presence":
+            updateUserList(message.users);
+            break;
         }
       }
 
@@ -254,8 +265,26 @@
         document.getElementById("status").textContent = message;
       }
 
+      function updateUserList(users) {
+        const list = document.getElementById("user-list");
+
+        list.innerHTML = "";
+
+        for (const user of users) {
+          const item = document.createElement("li");
+
+          item.textContent = `🟢 ${user.email}`;
+
+          list.appendChild(item);
+        }
+      }
+
       function setLoggedInState(isLoggedIn) {
         document.getElementById("logout").style.visibility = isLoggedIn
+          ? "visible"
+          : "hidden";
+
+        document.getElementById("presence").style.visibility = isLoggedIn
           ? "visible"
           : "hidden";
 

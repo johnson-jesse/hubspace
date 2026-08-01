@@ -1,4 +1,9 @@
-import { WORLD_WIDTH, ACTOR_SIZE, SPAWN_PADDING, WORLD_HEIGHT } from "../types/world.type";
+import {
+  ACTOR_SIZE,
+  SPAWN_PADDING,
+  WORLD_HEIGHT,
+  WORLD_WIDTH,
+} from "../types/world.type";
 
 export function randomColor() {
   return `#${Math.floor(Math.random() * 0xffffff)
@@ -8,12 +13,12 @@ export function randomColor() {
 
 export function randomPosition() {
   return {
-    x: Math.random() * (
-      WORLD_WIDTH - ACTOR_SIZE - SPAWN_PADDING * 2
-    ) + SPAWN_PADDING,
+    x:
+      Math.random() * (WORLD_WIDTH - ACTOR_SIZE - SPAWN_PADDING * 2) +
+      SPAWN_PADDING,
 
-    y: Math.random() * (
-      WORLD_HEIGHT - ACTOR_SIZE - SPAWN_PADDING * 2
-    ) + SPAWN_PADDING,
+    y:
+      Math.random() * (WORLD_HEIGHT - ACTOR_SIZE - SPAWN_PADDING * 2) +
+      SPAWN_PADDING,
   };
 }

@@ -15,7 +15,7 @@ console.log(
   db
     .query(
       `
-    SELECT id, email, password_hash
+    SELECT id, name, email
     FROM users
   `,
     )

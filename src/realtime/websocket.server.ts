@@ -3,7 +3,15 @@ import type { Server } from "http";
 import { WebSocket, WebSocketServer } from "ws";
 
 import type { TokenService } from "../types/token.type";
+import { presenceManager } from "./presence-manager";
 import { World } from "./world";
+import { userService } from "../container";
+
+export interface ClientSocket extends WebSocket {
+  connectionId: string;
+  userId?: number;
+  email?: string;
+}
 
 export function createWebSocketServer(
   server: Server,
@@ -15,18 +23,22 @@ export function createWebSocketServer(
 
   const world = new World();
 
-  function broadcast(message: unknown) {
-    const payload = JSON.stringify(message);
+  function broadcast(record: Record<string, unknown>) {
+    const message = JSON.stringify(record);
 
-    for (const client of wss.clients) {
+    wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(payload);
+        client.send(message);
       }
-    }
+    });
   }
 
   wss.on("connection", (socket) => {
+    const client = socket as ClientSocket;
+    client.connectionId = crypto.randomUUID();
+
     let actorId: string | null = null;
+    let authenticated = false;
 
     socket.on("message", (raw) => {
       const message = JSON.parse(raw.toString());
@@ -34,20 +46,40 @@ export function createWebSocketServer(
       switch (message.type) {
         case "authenticate":
           {
+            if (authenticated) return;
+
             try {
               const payload = tokenService.verify(message.token);
-
+              const user = userService.getUserById(payload.userId);
+              authenticated = true;
               actorId = crypto.randomUUID();
+              const actor = world.addActor(actorId, user);
 
-              const actor = world.addActor(actorId, payload);
+              client.userId = payload.userId;
+              client.email = payload.email;
 
+              presenceManager.add(client.connectionId, {
+                userId: payload.userId,
+                name: user.name,
+                email: payload.email,
+                connectedAt: new Date(),
+              });
+
+              // Send initial state to this client
               socket.send(
                 JSON.stringify({
                   type: "welcome",
                   actor,
                   actors: world.getActors(),
+                  users: presenceManager.getActiveUsers(),
                 }),
               );
+
+              // Notify everyone else
+              broadcast({
+                type: "presence",
+                users: presenceManager.getActiveUsers(),
+              });
 
               broadcast({
                 type: "actorSpawned",
@@ -94,6 +126,15 @@ export function createWebSocketServer(
     });
 
     socket.on("close", () => {
+      if (authenticated) {
+        presenceManager.remove(client.connectionId);
+
+        broadcast({
+          type: "presence",
+          users: presenceManager.getActiveUsers(),
+        });
+      }
+
       if (actorId) {
         world.removeActor(actorId);
 
@@ -102,12 +143,7 @@ export function createWebSocketServer(
           id: actorId,
         });
 
-        broadcast({
-          type: "actorRemoved",
-          id: actorId,
-        });
-
-        console.log("Actor disconnected:", actorId);
+        console.log(`${client.email} disconnected`);
       }
     });
   });

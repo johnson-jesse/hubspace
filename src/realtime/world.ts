@@ -1,11 +1,11 @@
 import type { Actor } from "../types/actor.type";
-import type { TokenPayload } from "../types/token.type";
+import type { User } from "../types/user.type";
 import { randomColor, randomPosition } from "./helper";
 
 export class World {
   private actors = new Map<string, Actor>();
 
-  addActor(id: string, token: TokenPayload) {
+  addActor(id: string, user: User) {
     const position = randomPosition();
 
     const actor: Actor = {
@@ -13,7 +13,7 @@ export class World {
       x: position.x,
       y: position.y,
       color: randomColor(),
-      token,
+      user,
     };
 
     this.actors.set(id, actor);
