@@ -21,13 +21,19 @@
         >OR</code
       >
       <a href="/register">Register new</a>
-      <button style="margin-left: 1rem" id="logout">Logout</button>
+
+      <div style="margin: 1rem; margin-left: 0">
+        <code style="font-size: small; color: chocolate">STATUS:</code>
+        <span id="status">Disconnected</span>
+        <button id="logout" style="margin-left: 1rem">Logout</button>
+      </div>
     </div>
 
     <canvas id="game" width="800" height="600" style="border: 1px solid black">
     </canvas>
 
     <script>
+      setLoggedInState(false);
       const canvas = document.getElementById("game");
       const ctx = canvas.getContext("2d");
       const actors = new Map();
@@ -86,6 +92,7 @@
       });
 
       document.getElementById("login").onclick = async () => {
+        setStatus("Logging in...");
         const email = document.getElementById("email").value;
 
         const password = document.getElementById("password").value;
@@ -102,13 +109,21 @@
         });
 
         if (!response.ok) {
-          console.error("Login failed:", response);
+          let message = response.statusText;
 
-          alert(response.statusText ?? "Login failed");
+          try {
+            const error = await response.json();
+            message = error.message ?? message;
+          } catch {}
+
+          setLoggedInState(false);
+          setStatus(`Login failed: ${message}`);
           return;
         }
 
         const data = await response.json();
+        setStatus("Authenticated");
+        setLoggedInState(true);
         connectWebSocket(data.token);
       };
 
@@ -127,7 +142,7 @@
 
         draw();
 
-        alert("Logged out");
+        setLoggedInState(false);
       };
 
       function connectWebSocket(token) {
@@ -197,6 +212,20 @@
             draw();
             break;
         }
+      }
+
+      function setStatus(message) {
+        document.getElementById("status").textContent = message;
+      }
+
+      function setLoggedInState(isLoggedIn) {
+        document.getElementById("logout").style.visibility = isLoggedIn
+          ? "visible"
+          : "hidden";
+
+        document.getElementById("login").style.visibility = isLoggedIn
+          ? "hidden"
+          : "visible";
       }
     </script>
   </body>
