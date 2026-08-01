@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+  <body>
+    <div style="margin: 1rem">
+      <input id="email" value="test@example.com" />
+      <input id="password" value="secret" type="password" />
+
+      <button id="login">Login</button>
+    </div>
+
+    <canvas id="game" width="800" height="600" style="border: 1px solid black">
+    </canvas>
+
+    <script>
+      const canvas = document.getElementById("game");
+      const ctx = canvas.getContext("2d");
+      const actors = new Map();
+
+      let socket = null;
+      let myActorId = null;
+      let myActor = null;
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (const actor of actors.values()) {
+          ctx.fillStyle = actor.color;
+          ctx.fillRect(actor.x, actor.y, 30, 30);
+          ctx.fillText(
+            actor.id === myActorId ? "YOU" : actor.id.substring(0, 4),
+            actor.x,
+            actor.y - 5,
+          );
+        }
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (!myActor) return;
+
+        switch (event.key) {
+          case "ArrowRight":
+            myActor.x += 10;
+            break;
+
+          case "ArrowLeft":
+            myActor.x -= 10;
+            break;
+
+          case "ArrowDown":
+            myActor.y += 10;
+            break;
+
+          case "ArrowUp":
+            myActor.y -= 10;
+            break;
+
+          default:
+            return;
+        }
+
+        if (socket?.readyState === WebSocket.OPEN) {
+          socket.send(
+            JSON.stringify({
+              type: "actorMoved",
+              x: myActor.x,
+              y: myActor.y,
+            }),
+          );
+        }
+      });
+
+      document.getElementById("login").onclick = async () => {
+        const email = document.getElementById("email").value;
+
+        const password = document.getElementById("password").value;
+
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+
+         if (!response.ok) {
+          console.error("Login failed:", response);
+
+          alert(response.statusText ?? "Login failed");
+          return;
+        }
+
+        const data = await response.json();
+        connectWebSocket(data.token);
+      };
+
+      function connectWebSocket(token) {
+        socket = new WebSocket("ws://localhost:3000");
+
+        socket.onopen = () => {
+          console.log("WebSocket connected");
+
+          socket.send(
+            JSON.stringify({
+              type: "authenticate",
+              token,
+            }),
+          );
+        };
+
+        socket.onmessage = (event) => {
+          const message = JSON.parse(event.data);
+          console.log(message);
+          handleMessage(message);
+        };
+
+        socket.onclose = () => {
+          console.log("WebSocket closed");
+        };
+      }
+
+      function handleMessage(message) {
+        switch (message.type) {
+          case "welcome":
+            myActorId = message.actor.id;
+
+            actors.clear();
+
+            for (const actor of message.actors) {
+              actors.set(actor.id, actor);
+            }
+
+            myActor = actors.get(myActorId);
+
+            draw();
+            break;
+
+          case "actorSpawned":
+            actors.set(message.actor.id, message.actor);
+
+            draw();
+            break;
+
+          case "actorMoved":
+            {
+              const actor = actors.get(message.actor.id);
+
+              if (actor) {
+                actor.x = message.actor.x;
+                actor.y = message.actor.y;
+              } else {
+                actors.set(message.actor.id, message.actor);
+              }
+
+              draw();
+            }
+            break;
+
+          case "actorRemoved":
+            actors.delete(message.id);
+            draw();
+            break;
+        }
+      }
+    </script>
+  </body>
+</html>

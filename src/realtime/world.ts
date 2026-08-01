@@ -38,6 +38,10 @@ export class World {
     this.actors.delete(id);
   }
 
+  getActor(id: string) {
+    return this.actors.get(id);
+  }
+
   getActors() {
     return Array.from(this.actors.values());
   }
