@@ -1,11 +1,26 @@
 <!doctype html>
 <html>
+  <head>
+    <title>NESWS</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  </head>
   <body>
+    <h2>Node Express SQLite WebSocket Demo</h2>
     <div style="margin: 1rem">
-      <input id="email" value="test@example.com" />
-      <input id="password" value="secret" type="password" />
+      <input id="email" value="" placeholder="email" />
+      <input id="password" value="" placeholder="password" type="password" />
 
       <button id="login">Login</button>
+      <code
+        style="
+          font-size: small;
+          color: chocolate;
+          margin-left: 1rem;
+          margin-right: 1rem;
+        "
+        >OR</code
+      >
+      <a href="/register">Register new</a>
     </div>
 
     <canvas id="game" width="800" height="600" style="border: 1px solid black">
@@ -85,7 +100,7 @@
           }),
         });
 
-         if (!response.ok) {
+        if (!response.ok) {
           console.error("Login failed:", response);
 
           alert(response.statusText ?? "Login failed");

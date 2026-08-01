@@ -12,7 +12,7 @@ export function createUserRepository(db: Database): UserRepository {
             email,
             password_hash
           )
-          VALUES (?, ?)
+          VALUES (?, ?, ?)
         `,
         )
         .run(name, email, passwordHash);

@@ -11,7 +11,11 @@ export function createApp(dependencies: AppDependencies) {
 
   app.use(express.json());
 
-  app.use(express.static(path.join(__dirname, "public")));
+  app.use(express.static(path.join(process.cwd(), "public")));
+
+  app.get("/register", (_req, res) => {
+    res.sendFile(path.join(process.cwd(), "public", "register.html"));
+  });
 
   app.get("/health", (_req, res) => {
     res.json({

@@ -8,12 +8,13 @@ export function createAuthController(
 ) {
   return {
     async register(req: Request, res: Response) {
-      const { email, password } = req.body;
+      const { name, email, password } = req.body;
 
-      const user = await userService.registerUser(email, password);
+      const user = await userService.registerUser(name, email, password);
 
       res.status(201).json({
         id: user.id,
+        name: user.name,
         email: user.email,
       });
     },
