@@ -21,6 +21,7 @@
         >OR</code
       >
       <a href="/register">Register new</a>
+      <button style="margin-left: 1rem" id="logout">Logout</button>
     </div>
 
     <canvas id="game" width="800" height="600" style="border: 1px solid black">
@@ -109,6 +110,24 @@
 
         const data = await response.json();
         connectWebSocket(data.token);
+      };
+
+      document.getElementById("logout").onclick = () => {
+        console.log("Logging out");
+
+        if (socket) {
+          socket.close();
+          socket = null;
+        }
+
+        actors.clear();
+
+        myActor = null;
+        myActorId = null;
+
+        draw();
+
+        alert("Logged out");
       };
 
       function connectWebSocket(token) {
