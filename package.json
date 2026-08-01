@@ -1,8 +1,9 @@
 {
-  "name": "nesws",
+  "name": "hubspace",
   "type": "module",
   "private": true,
   "author": "Jesse A Johnson",
+  "description": "Nexus is a realtime web application demonstrating authenticated multiplayer-style communication using Node.js, Express, SQLite, and WebSockets. Users can create accounts, authenticate securely, and connect to a shared live environment where client state is synchronized instantly across connected sessions.",
   "engines": {
     "node": ">=24"
   },

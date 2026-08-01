@@ -1,11 +1,18 @@
 <!doctype html>
 <html>
   <head>
-    <title>NESWS</title>
+    <title>Hubspace</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
   <body>
-    <h2>Node Express SQLite WebSocket Demo</h2>
+    <h2>A Node - Express - SQLite - WebSocket Demo</h2>
+    <h6 style="margin-top: -15px; max-width: 65%">
+      Hubspace is a realtime web application demonstrating authenticated
+      multiplayer-style communication using Node.js, Express, SQLite, and
+      WebSockets. Users can create accounts, authenticate securely, and connect
+      to a shared live environment where client state is synchronized instantly
+      across connected sessions.
+    </h6>
     <div style="margin: 1rem">
       <input id="email" value="" placeholder="email" />
       <input id="password" value="" placeholder="password" type="password" />
@@ -35,7 +42,12 @@
       </div>
     </div>
 
-    <canvas id="game" width="800" height="600" style="border: 1px solid black">
+    <canvas
+      id="game"
+      width="800"
+      height="600"
+      style="border: 1px solid black; background-color: #4b5563"
+    >
     </canvas>
 
     <script>
@@ -49,11 +61,24 @@
       let myActor = null;
 
       function draw() {
+        // Clear old frame
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        // Draw world background FIRST
+        ctx.fillStyle = "#4b5563";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
         for (const actor of actors.values()) {
+          // Actor fill
           ctx.fillStyle = actor.color;
           ctx.fillRect(actor.x, actor.y, 30, 30);
+
+          // Actor border
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(actor.x, actor.y, 30, 30);
+
+          // Actor label
           ctx.fillText(
             actor.id === myActorId ? "YOU" : actor.id.substring(0, 4),
             actor.x,
