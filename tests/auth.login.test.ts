@@ -3,23 +3,26 @@ import request from "supertest";
 
 import { createApp } from "../src/app";
 
-import { createUserRepository } from "../src/repositories/user.repository";
 import { createPasswordHasher } from "../src/auth/password-hasher";
+import { createUserRepository } from "../src/repositories/user.repository";
 import { createUserService } from "../src/services/user.service";
 import { createTestDatabase } from "./helpers/database";
 
-describe("POST /api/auth/register", () => {
+describe("POST /api/auth/login", () => {
   const db = createTestDatabase();
+
   const userRepository = createUserRepository(db);
+
   const passwordHasher = createPasswordHasher();
+
   const userService = createUserService(userRepository, passwordHasher);
 
   const app = createApp({
     userService,
   });
 
-  it("creates a user", async () => {
-    const response = await request(app)
+  it("authenticates an existing user", async () => {
+    await request(app)
       .post("/api/auth/register")
       .send({
         email: "test@example.com",
@@ -27,7 +30,14 @@ describe("POST /api/auth/register", () => {
       })
       .expect(201);
 
-    expect(response.body.email).toBe("test@example.com");
-    expect(response.body.id).toBeDefined();
+    const response = await request(app)
+      .post("/api/auth/login")
+      .send({
+        email: "test@example.com",
+        password: "secret",
+      })
+      .expect(200);
+
+    expect(response.body.token).toBeDefined();
   });
 });

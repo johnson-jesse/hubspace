@@ -5,9 +5,9 @@ import type { AppDependencies } from "../type";
 export default function createAuthRoutes(dependencies: AppDependencies) {
   const router = Router();
 
-  const controller = createAuthController(dependencies.userService);
+  const controller = createAuthController(dependencies.userService, dependencies.authService);
 
   router.post("/register", controller.register);
-
+  router.post("/login", controller.login);
   return router;
 }
