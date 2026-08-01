@@ -1,12 +1,18 @@
-import type { User } from "../repositories/user.repository";
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  password_hash: string;
+  created_at: string;
+}
 
 export interface UserService {
-  registerUser(email: string, password: string): Promise<User>;
+  registerUser(name: string, email: string, password: string): Promise<User>;
   getUserById(id: number): User;
 }
 
 export interface UserRepository {
-  createUser(email: string, passwordHash: string): User;
+  createUser(name: string, email: string, passwordHash: string): User;
   findUserByEmail(email: string): User | undefined;
   findUserById(id: number): User | undefined;
 }

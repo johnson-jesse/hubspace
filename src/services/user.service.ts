@@ -7,7 +7,7 @@ export function createUserService(
   passwordHasher: PasswordHasher,
 ): UserService {
   return {
-    async registerUser(email: string, password: string) {
+    async registerUser(name: string, email: string, password: string) {
       const existingUser = userRepository.findUserByEmail(email);
 
       if (existingUser) {
@@ -16,7 +16,7 @@ export function createUserService(
 
       const passwordHash = await passwordHasher.hash(password);
 
-      return userRepository.createUser(email, passwordHash);
+      return userRepository.createUser(name, email, passwordHash);
     },
     getUserById(id: number) {
       const user = userRepository.findUserById(id);

@@ -1,5 +1,6 @@
 import { createApp } from "./app";
 import { authService, tokenService, userService } from "./container";
+import { createWebSocketServer } from "./realtime/websocket.server";
 
 const app = createApp({
   userService,
@@ -7,6 +8,8 @@ const app = createApp({
   tokenService,
 });
 
-app.listen(3000, () => {
-  console.log("Server running");
+const server = app.listen(3000, () => {
+  console.log("Server running on port 3000");
 });
+
+createWebSocketServer(server, tokenService);

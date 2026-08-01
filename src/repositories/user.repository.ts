@@ -1,27 +1,21 @@
 import type { Database } from "bun:sqlite";
-import type { UserRepository } from "../types/user.type";
-
-export interface User {
-  id: number;
-  email: string;
-  password_hash: string;
-  created_at: string;
-}
+import type { User, UserRepository } from "../types/user.type";
 
 export function createUserRepository(db: Database): UserRepository {
   return {
-    createUser(email: string, passwordHash: string): User {
+    createUser(name: string, email: string, passwordHash: string): User {
       const result = db
         .prepare(
           `
           INSERT INTO users (
+            name,
             email,
             password_hash
           )
           VALUES (?, ?)
         `,
         )
-        .run(email, passwordHash);
+        .run(name, email, passwordHash);
 
       return this.findUserById(Number(result.lastInsertRowid))!;
     },
