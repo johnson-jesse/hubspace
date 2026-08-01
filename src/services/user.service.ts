@@ -1,8 +1,8 @@
 import { AppError } from "../errors/app-errors";
-import { userRepository } from "../repositories";
+import type { UserRepository } from "../repositories/user.type";
 import type { UserService } from "./user.type";
 
-export function createUserService(): UserService {
+export function createUserService(userRepository: UserRepository): UserService {
   return {
     registerUser(email: string, passwordHash: string) {
       const existingUser = userRepository.findUserByEmail(email);

@@ -1,7 +1,8 @@
 import { createApp } from "./app";
+import { userService } from "./container";
 
 const app = createApp({
-  userService
+  userService,
 });
 
 app.listen(3000, () => {

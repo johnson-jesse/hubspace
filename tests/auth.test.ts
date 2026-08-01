@@ -2,11 +2,18 @@ import { describe, it, expect } from "bun:test";
 import request from "supertest";
 
 import { createApp } from "../src/app";
+
+import { createTestDatabase } from "./helpers/database";
+import { createUserRepository } from "../src/repositories/user.repository";
 import { createUserService } from "../src/services/user.service";
 
 describe("POST /api/auth/register", () => {
+  const db = createTestDatabase();
+  const userRepository = createUserRepository(db);
+  const userService = createUserService(userRepository);
+
   const app = createApp({
-    userService: createUserService(),
+    userService,
   });
 
   it("creates a user", async () => {
@@ -19,7 +26,6 @@ describe("POST /api/auth/register", () => {
       .expect(201);
 
     expect(response.body.email).toBe("test@example.com");
-
     expect(response.body.id).toBeDefined();
   });
 });

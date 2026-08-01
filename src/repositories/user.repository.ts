@@ -1,4 +1,5 @@
 import type { Database } from "bun:sqlite";
+import type { UserRepository } from "./user.type";
 
 export interface User {
   id: number;
@@ -7,7 +8,7 @@ export interface User {
   created_at: string;
 }
 
-export function createUserRepository(db: Database) {
+export function createUserRepository(db: Database): UserRepository {
   return {
     createUser(email: string, passwordHash: string): User {
       const result = db
