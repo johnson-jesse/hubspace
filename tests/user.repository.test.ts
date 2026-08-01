@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
-import { createTestDatabase } from "./helpers/database";
-import { createUserRepository } from "../src/repositories/user.repository";
+import { createTestDatabase } from "./helpers/database.js";
+import { createUserRepository } from "../src/repositories/user.repository.js";
 
 describe("User Repository", () => {
   it("creates a user", () => {
@@ -8,7 +8,7 @@ describe("User Repository", () => {
 
     const users = createUserRepository(db);
 
-    const user = users.createUser("test@example.com", "hashed_password");
+    const user = users.createUser("Tester", "test@example.com", "hashed_password");
 
     expect(user.email).toBe("test@example.com");
 

@@ -1,8 +1,8 @@
-import type { PasswordHasher } from "../auth/password-hasher.type";
-import { AppError } from "../errors/app-errors";
-import type { AuthService } from "../types/auth.type";
-import type { TokenService } from "../types/token.type";
-import type { UserRepository } from "../types/user.type";
+import type { PasswordHasher } from "../auth/password-hasher.type.js";
+import { AppError } from "../errors/app-errors.js";
+import type { AuthService } from "../types/auth.type.js";
+import type { TokenService } from "../types/token.type.js";
+import type { UserRepository } from "../types/user.type.js";
 
 export function createAuthService(
   userRepository: UserRepository,

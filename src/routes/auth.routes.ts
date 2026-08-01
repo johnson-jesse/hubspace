@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createAuthController } from "../controllers/auth.controller";
-import type { AppDependencies } from "../types/type";
+import { createAuthController } from "../controllers/auth.controller.js";
+import type { AppDependencies } from "../types/type.js";
 
 export default function createAuthRoutes(dependencies: AppDependencies) {
   const router = Router();

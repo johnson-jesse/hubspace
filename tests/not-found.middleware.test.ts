@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import request from "supertest";
-import { createTestApp } from "./helpers/create-test-app";
+import { createTestApp } from "./helpers/create-test-app.js";
 
 describe("404 handling", () => {
   it("returns a consistent error response", async () => {

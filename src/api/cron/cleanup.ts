@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { cleanupOldUsers } from "../../db/cleanup";
+import { cleanupOldUsers } from "../../db/cleanup.js";
 
 export function cleanupCron(req: Request, res: Response) {
   const auth = req.headers.authorization;

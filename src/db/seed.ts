@@ -1,5 +1,5 @@
-import { createPasswordHasher } from "../auth/password-hasher";
-import { db } from "./connection";
+import { createPasswordHasher } from "../auth/password-hasher.js";
+import { db } from "./connection.js";
 
 const passwordHasher = createPasswordHasher();
 

@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import type { User, UserRepository } from "../types/user.type";
+import type { User, UserRepository } from "../types/user.type.js";
 
 export function createUserRepository(db: Database): UserRepository {
   return {

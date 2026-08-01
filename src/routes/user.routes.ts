@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createAuthMiddleware } from "../middleware/auth.middleware";
-import type { AppDependencies } from "../types/type";
+import { createAuthMiddleware } from "../middleware/auth.middleware.js";
+import type { AppDependencies } from "../types/type.js";
 
 export default function createUserRoutes(dependencies: AppDependencies) {
   const router = Router();

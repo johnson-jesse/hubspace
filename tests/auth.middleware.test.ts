@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import request from "supertest";
-import { createTestApp } from "./helpers/create-test-app";
+import { createTestApp } from "./helpers/create-test-app.js";
 
 describe("Authentication middleware", () => {
   it("rejects requests without a token", async () => {

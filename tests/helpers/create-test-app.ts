@@ -1,10 +1,10 @@
-import { createApp } from "../../src/app";
-import { createPasswordHasher } from "../../src/auth/password-hasher";
-import { createUserRepository } from "../../src/repositories/user.repository";
-import { createAuthService } from "../../src/services/auth.service";
-import { createJwtTokenService } from "../../src/services/jwt-token.service";
-import { createUserService } from "../../src/services/user.service";
-import { createTestDatabase } from "./database";
+import { createApp } from "../../src/app.js";
+import { createPasswordHasher } from "../../src/auth/password-hasher.js";
+import { createUserRepository } from "../../src/repositories/user.repository.js";
+import { createAuthService } from "../../src/services/auth.service.js";
+import { createJwtTokenService } from "../../src/services/jwt-token.service.js";
+import { createUserService } from "../../src/services/user.service.js";
+import { createTestDatabase } from "./database.js";
 
 export function createTestApp() {
   const db = createTestDatabase();

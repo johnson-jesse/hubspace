@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import request from "supertest";
-import { createTestApp } from "./helpers/create-test-app";
+import { createTestApp } from "./helpers/create-test-app.js";
 
 describe("POST /api/auth/me", () => {
   it("returns the current user", async () => {
@@ -9,6 +9,7 @@ describe("POST /api/auth/me", () => {
     await request(app)
       .post("/api/auth/register")
       .send({
+        name: "Tester",
         email: "test@example.com",
         password: "secret",
       })

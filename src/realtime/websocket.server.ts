@@ -2,8 +2,8 @@ import crypto from "crypto";
 import type { Server } from "http";
 import { WebSocket, WebSocketServer } from "ws";
 
-import type { TokenService } from "../types/token.type";
-import { World } from "./world";
+import type { TokenService } from "../types/token.type.js";
+import { World } from "./world.js";
 
 export function createWebSocketServer(
   server: Server,

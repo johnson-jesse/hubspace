@@ -1,5 +1,5 @@
 import argon2 from "argon2";
-import type { PasswordHasher } from "./password-hasher.type";
+import type { PasswordHasher } from "./password-hasher.type.js";
 
 export function createPasswordHasher(): PasswordHasher {
   return {

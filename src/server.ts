@@ -1,6 +1,6 @@
-import { createApp } from "./app";
-import { authService, tokenService, userService } from "./container";
-import { createWebSocketServer } from "./realtime/websocket.server";
+import { createApp } from "./app.js";
+import { authService, tokenService, userService } from "./container.js";
+import { createWebSocketServer } from "./realtime/websocket.server.js";
 
 const app = createApp({
   userService,

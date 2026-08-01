@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { db } from "./connection";
+import { db } from "./connection.js";
 
 const migration = readFileSync(
   new URL("./migrations/001_initial.sql", import.meta.url),

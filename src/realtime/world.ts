@@ -1,6 +1,6 @@
-import type { Actor } from "../types/actor.type";
-import type { TokenPayload } from "../types/token.type";
-import { randomColor, randomPosition } from "./helper";
+import type { Actor } from "../types/actor.type.js";
+import type { TokenPayload } from "../types/token.type.js";
+import { randomColor, randomPosition } from "./helper.js";
 
 export class World {
   private actors = new Map<string, Actor>();
