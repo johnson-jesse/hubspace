@@ -179,7 +179,10 @@
       };
 
       function connectWebSocket(token) {
-        socket = new WebSocket("ws://localhost:3000");
+        const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+        socket = new WebSocket(
+          `${protocol}://${window.location.host}?token=${token}`,
+        );
 
         socket.onopen = () => {
           console.log("WebSocket connected");

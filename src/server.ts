@@ -1,4 +1,5 @@
 import { createApp } from "./app.js";
+import { env } from "./config/env.js";
 import { authService, tokenService, userService } from "./container";
 import { createWebSocketServer } from "./realtime/websocket.server";
 
@@ -8,8 +9,8 @@ const app = createApp({
   tokenService,
 });
 
-const server = app.listen(3000, () => {
-  console.log("Server running on port 3000");
+const server = app.listen(env.port, () => {
+  console.log(`Server running on port ${env.port}`);
 });
 
 createWebSocketServer(server, tokenService);
