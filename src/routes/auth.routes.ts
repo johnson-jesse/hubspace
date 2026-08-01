@@ -1,8 +1,13 @@
 import { Router } from "express";
-import { register } from "../controllers/auth.controller";
+import { createAuthController } from "../controllers/auth.controller";
+import type { AppDependencies } from "../type";
 
-const router = Router();
+export default function createAuthRoutes(dependencies: AppDependencies) {
+  const router = Router();
 
-router.post("/register", register);
+  const controller = createAuthController(dependencies.userService);
 
-export default router;
+  router.post("/register", controller.register);
+
+  return router;
+}

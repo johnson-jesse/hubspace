@@ -1,7 +1,9 @@
-import app from "./app";
+import { createApp } from "./app";
 
-const PORT = process.env.PORT ?? 3000;
+const app = createApp({
+  userService
+});
 
-app.listen(PORT, () => {
-  console.log(`Listening on http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log("Server running");
 });

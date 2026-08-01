@@ -1,4 +1,4 @@
-import { db } from "../db/database";
+import type { Database } from "bun:sqlite";
 
 export interface User {
   id: number;
@@ -7,36 +7,46 @@ export interface User {
   created_at: string;
 }
 
-export function createUser(email: string, passwordHash: string): User {
-  const statement = db.prepare(`
-    INSERT INTO users (
-      email,
-      password_hash
-    )
-    VALUES (?, ?)
-  `);
+export function createUserRepository(db: Database) {
+  return {
+    createUser(email: string, passwordHash: string): User {
+      const result = db
+        .prepare(
+          `
+          INSERT INTO users (
+            email,
+            password_hash
+          )
+          VALUES (?, ?)
+        `,
+        )
+        .run(email, passwordHash);
 
-  const result = statement.run(email, passwordHash);
+      return this.findUserById(Number(result.lastInsertRowid))!;
+    },
 
-  return findUserById(Number(result.lastInsertRowid))!;
-}
+    findUserByEmail(email: string): User | undefined {
+      return db
+        .query(
+          `
+          SELECT *
+          FROM users
+          WHERE email = ?
+        `,
+        )
+        .get(email) as User | undefined;
+    },
 
-export function findUserByEmail(email: string): User | undefined {
-  const statement = db.prepare(`
-    SELECT *
-    FROM users
-    WHERE email = ?
-  `);
-
-  return statement.get(email) as User | undefined;
-}
-
-export function findUserById(id: number): User | undefined {
-  const statement = db.prepare(`
-    SELECT *
-    FROM users
-    WHERE id = ?
-  `);
-
-  return statement.get(id) as User | undefined;
+    findUserById(id: number): User | undefined {
+      return db
+        .query(
+          `
+          SELECT *
+          FROM users
+          WHERE id = ?
+        `,
+        )
+        .get(id) as User | undefined;
+    },
+  };
 }

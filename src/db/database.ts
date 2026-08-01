@@ -1,17 +1,13 @@
 import { Database } from "bun:sqlite";
-import { mkdirSync } from "node:fs";
-import { dirname } from "node:path";
 
-import { env } from "../config/env.ts";
+export function createDatabase(
+  filename: string
+) {
+  const db = new Database(filename);
 
-mkdirSync(dirname(env.database.filename), {
-  recursive: true
-});
+  db.run(`
+    PRAGMA journal_mode = WAL;
+  `);
 
-export const db = new Database(
-  env.database.filename
-);
-
-db.run(`
-  PRAGMA journal_mode = WAL;
-`);
+  return db;
+}

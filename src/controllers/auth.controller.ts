@@ -1,25 +1,17 @@
 import type { Request, Response } from "express";
-import { registerUser } from "../services/auth.service";
+import type { UserService } from "../services/user.type";
 
+export function createAuthController(userService: UserService) {
+  return {
+    register(req: Request, res: Response) {
+      const { email, password } = req.body;
 
-export function register(
-  req: Request,
-  res: Response
-) {
-  const {
-    email,
-    password
-  } = req.body;
+      const user = userService.registerUser(email, password);
 
-
-  const user = registerUser(
-    email,
-    password
-  );
-
-
-  res.status(201).json({
-    id: user.id,
-    email: user.email
-  });
+      res.status(201).json({
+        id: user.id,
+        email: user.email,
+      });
+    },
+  };
 }

@@ -1,4 +1,4 @@
-import { db } from "./database";
+import { db } from "./connection";
 
 const tables = db
   .query(`

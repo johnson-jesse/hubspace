@@ -1,6 +1,8 @@
 import { describe, expect, it } from "bun:test";
 import request from "supertest";
-import app from "../src/app";
+import { createApp } from "../src/app";
+
+const app = createApp();
 
 describe("GET /health", () => {
   it("returns service health", async () => {
