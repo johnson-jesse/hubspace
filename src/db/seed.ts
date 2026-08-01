@@ -9,14 +9,14 @@ const users: {
   password: string;
 }[] = [
   {
-    name: "Jesse Johnson",
+    name: "Fizzo",
     email: "jesse@fizzog.io",
-    password: "2345",
+    password: "1234",
   },
   {
-    name: "Kyle Friesen",
-    email: "kylef@badvr.com",
-    password: "1234",
+    name: "Jesse Johnson",
+    email: "jesseajohnson@pm.me",
+    password: "2345",
   },
 ];
 
