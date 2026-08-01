@@ -1,12 +1,10 @@
-import { describe, it, expect } from "bun:test";
+import { describe, expect, it } from "bun:test";
 import request from "supertest";
-
-import { createApp } from "../src/app";
-
-const app = createApp();
+import { createTestApp } from "./helpers/create-test-app";
 
 describe("404 handling", () => {
   it("returns a consistent error response", async () => {
+    const { app } = createTestApp();
     const response = await request(app).get("/does-not-exist").expect(404);
 
     expect(response.body).toEqual({

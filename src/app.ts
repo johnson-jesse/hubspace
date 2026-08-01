@@ -2,9 +2,10 @@ import express from "express";
 import { errorMiddleware } from "./middleware/error.middleware";
 import { notFoundMiddleware } from "./middleware/not-found.middleware";
 import createAuthRoutes from "./routes/auth.routes";
-import type { AppDependencies } from "./type";
+import type { AppDependencies } from "./types/type";
+import createUserRoutes from "./routes/user.routes";
 
-export function createApp(dependencies?: AppDependencies) {
+export function createApp(dependencies: AppDependencies) {
   const app = express();
 
   app.use(express.json());
@@ -19,6 +20,7 @@ export function createApp(dependencies?: AppDependencies) {
 
   if (dependencies) {
     app.use("/api/auth", createAuthRoutes(dependencies));
+    app.use("/api/users", createUserRoutes(dependencies));
   }
 
   app.use(notFoundMiddleware);

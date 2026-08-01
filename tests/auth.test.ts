@@ -1,22 +1,9 @@
 import { describe, expect, it } from "bun:test";
 import request from "supertest";
-
-import { createApp } from "../src/app";
-
-import { createUserRepository } from "../src/repositories/user.repository";
-import { createPasswordHasher } from "../src/auth/password-hasher";
-import { createUserService } from "../src/services/user.service";
-import { createTestDatabase } from "./helpers/database";
+import { createTestApp } from "./helpers/create-test-app";
 
 describe("POST /api/auth/register", () => {
-  const db = createTestDatabase();
-  const userRepository = createUserRepository(db);
-  const passwordHasher = createPasswordHasher();
-  const userService = createUserService(userRepository, passwordHasher);
-
-  const app = createApp({
-    userService,
-  });
+  const { app } = createTestApp();
 
   it("creates a user", async () => {
     const response = await request(app)

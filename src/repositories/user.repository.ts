@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import type { UserRepository } from "./user.type";
+import type { UserRepository } from "../types/user.type";
 
 export interface User {
   id: number;

@@ -1,11 +1,10 @@
 import { describe, expect, it } from "bun:test";
 import request from "supertest";
-import { createApp } from "../src/app";
-
-const app = createApp();
+import { createTestApp } from "./helpers/create-test-app";
 
 describe("GET /health", () => {
   it("returns service health", async () => {
+    const { app } = createTestApp();
     const response = await request(app).get("/health").expect(200);
 
     expect(response.body).toEqual({

@@ -2,8 +2,8 @@ import { describe, expect, it } from "bun:test";
 import request from "supertest";
 import { createTestApp } from "./helpers/create-test-app";
 
-describe("POST /api/auth/login", () => {
-  it("authenticates an existing user", async () => {
+describe("POST /api/auth/me", () => {
+  it("returns the current user", async () => {
     const { app } = createTestApp();
 
     await request(app)
@@ -14,7 +14,7 @@ describe("POST /api/auth/login", () => {
       })
       .expect(201);
 
-    const response = await request(app)
+    const login = await request(app)
       .post("/api/auth/login")
       .send({
         email: "test@example.com",
@@ -22,6 +22,11 @@ describe("POST /api/auth/login", () => {
       })
       .expect(200);
 
-    expect(response.body.token).toBeDefined();
+    const response = await request(app)
+      .get("/api/users/me")
+      .set("Authorization", `Bearer ${login.body.token}`)
+      .expect(200);
+
+    expect(response.body.user.email).toBe("test@example.com");
   });
 });

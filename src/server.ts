@@ -1,9 +1,10 @@
 import { createApp } from "./app";
-import { authService, userService } from "./container";
+import { authService, tokenService, userService } from "./container";
 
 const app = createApp({
   userService,
   authService,
+  tokenService,
 });
 
 app.listen(3000, () => {

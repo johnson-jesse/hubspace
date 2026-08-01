@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { AuthService } from "../services/auth.type";
-import type { UserService } from "../services/user.type";
+import type { AuthService } from "../types/auth.type";
+import type { UserService } from "../types/user.type";
 
 export function createAuthController(
   userService: UserService,

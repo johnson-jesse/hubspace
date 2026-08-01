@@ -8,7 +8,7 @@ import { createUserService } from "./services/user.service";
 
 const userRepository = createUserRepository(db);
 const passwordHasher = createPasswordHasher();
-const tokenService = createJwtTokenService(env.jwt.secret);
+export const tokenService = createJwtTokenService(env.jwt.secret);
 
 export const userService = createUserService(userRepository, passwordHasher);
 
