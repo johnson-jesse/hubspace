@@ -7,6 +7,8 @@ import { createPasswordHasher } from "../src/auth/password-hasher";
 import { createUserRepository } from "../src/repositories/user.repository";
 import { createUserService } from "../src/services/user.service";
 import { createTestDatabase } from "./helpers/database";
+import { createAuthService } from "../src/services/auth.service";
+import { createJwtTokenService } from "../src/services/jwt-token.service";
 
 describe("POST /api/auth/login", () => {
   const db = createTestDatabase();
@@ -14,11 +16,18 @@ describe("POST /api/auth/login", () => {
   const userRepository = createUserRepository(db);
 
   const passwordHasher = createPasswordHasher();
+  const tokenService = createJwtTokenService(process.env.JWT_SECRET);
 
   const userService = createUserService(userRepository, passwordHasher);
+  const authService = createAuthService(
+    userRepository,
+    passwordHasher,
+    tokenService,
+  );
 
   const app = createApp({
     userService,
+    authService,
   });
 
   it("authenticates an existing user", async () => {
