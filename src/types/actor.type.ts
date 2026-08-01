@@ -1,4 +1,4 @@
-import type { TokenPayload } from "./token.type.js";
+import type { TokenPayload } from "./token.type";
 
 export interface Actor {
   id: string;

@@ -1,4 +1,4 @@
-import { WORLD_WIDTH, ACTOR_SIZE, SPAWN_PADDING, WORLD_HEIGHT } from "../types/world.type.js";
+import { WORLD_WIDTH, ACTOR_SIZE, SPAWN_PADDING, WORLD_HEIGHT } from "../types/world.type";
 
 export function randomColor() {
   return `#${Math.floor(Math.random() * 0xffffff)

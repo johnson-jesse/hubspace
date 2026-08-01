@@ -1,6 +1,6 @@
-import type { AuthService } from "./auth.type.js";
-import type { TokenService } from "./token.type.js";
-import type { UserService } from "./user.type.js";
+import type { AuthService } from "./auth.type";
+import type { TokenService } from "./token.type";
+import type { UserService } from "./user.type";
 
 export interface AppDependencies {
   userService: UserService;

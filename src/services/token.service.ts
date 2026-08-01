@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import type { TokenPayload, TokenService } from "../types/token.type.js";
+import type { TokenPayload, TokenService } from "../types/token.type";
 
 export function createTokenService(
   secret = "development-secret",

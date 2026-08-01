@@ -1,10 +1,10 @@
 import express from "express";
 import path from "path";
-import { errorMiddleware } from "./middleware/error.middleware.js";
-import { notFoundMiddleware } from "./middleware/not-found.middleware.js";
-import createAuthRoutes from "./routes/auth.routes.js";
-import createUserRoutes from "./routes/user.routes.js";
-import type { AppDependencies } from "./types/type.js";
+import { errorMiddleware } from "./middleware/error.middleware";
+import { notFoundMiddleware } from "./middleware/not-found.middleware";
+import createAuthRoutes from "./routes/auth.routes";
+import createUserRoutes from "./routes/user.routes";
+import type { AppDependencies } from "./types/type";
 
 export function createApp(dependencies: AppDependencies) {
   const app = express();
