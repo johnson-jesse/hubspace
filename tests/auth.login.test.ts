@@ -5,10 +5,10 @@ import { createApp } from "../src/app";
 
 import { createPasswordHasher } from "../src/auth/password-hasher";
 import { createUserRepository } from "../src/repositories/user.repository";
-import { createUserService } from "../src/services/user.service";
-import { createTestDatabase } from "./helpers/database";
 import { createAuthService } from "../src/services/auth.service";
 import { createJwtTokenService } from "../src/services/jwt-token.service";
+import { createUserService } from "../src/services/user.service";
+import { createTestDatabase } from "./helpers/database";
 
 describe("POST /api/auth/login", () => {
   const db = createTestDatabase();
@@ -16,7 +16,7 @@ describe("POST /api/auth/login", () => {
   const userRepository = createUserRepository(db);
 
   const passwordHasher = createPasswordHasher();
-  const tokenService = createJwtTokenService(process.env.JWT_SECRET);
+  const tokenService = createJwtTokenService("test-secret");
 
   const userService = createUserService(userRepository, passwordHasher);
   const authService = createAuthService(
