@@ -1,6 +1,6 @@
 import type { Actor } from "../types/actor.type";
 import type { User } from "../types/user.type";
-import { randomColor, randomPosition } from "./helper";
+import { randomActorColor, randomPosition } from "./helper";
 
 export class World {
   private actors = new Map<string, Actor>();
@@ -12,7 +12,7 @@ export class World {
       id,
       x: position.x,
       y: position.y,
-      color: randomColor(),
+      color: randomActorColor(),
       user,
     };
 

@@ -1,14 +1,15 @@
 import {
+  ACTOR_COLORS,
   ACTOR_SIZE,
   SPAWN_PADDING,
   WORLD_HEIGHT,
   WORLD_WIDTH,
 } from "../types/world.type";
 
-export function randomColor() {
-  return `#${Math.floor(Math.random() * 0xffffff)
-    .toString(16)
-    .padStart(6, "0")}`;
+export function randomActorColor(): string {
+  return (
+    ACTOR_COLORS[Math.floor(Math.random() * ACTOR_COLORS.length)] || "white"
+  );
 }
 
 export function randomPosition() {

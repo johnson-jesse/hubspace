@@ -67,7 +67,7 @@
       let myActor = null;
 
       function draw() {
-        console.log("users", actors)
+        console.log("users", actors);
         // Clear old frame
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -76,21 +76,27 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         for (const actor of actors.values()) {
-          // Actor fill
+          // // Actor fill
+          // ctx.fillStyle = actor.color;
+          // ctx.fillRect(actor.x, actor.y, 30, 30);
+
+          // // Actor border
+          // ctx.strokeStyle = "#000000";
+          // ctx.lineWidth = 2;
+          // ctx.strokeRect(actor.x, actor.y, 30, 30);
+
           ctx.fillStyle = actor.color;
           ctx.fillRect(actor.x, actor.y, 30, 30);
 
-          // Actor border
-          ctx.strokeStyle = "#000000";
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = "rgba(255,255,255,0.75)";
+          ctx.lineWidth = 1;
           ctx.strokeRect(actor.x, actor.y, 30, 30);
 
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "12px sans-serif";
+
           // Actor label
-          ctx.fillText(
-            actor.user.name,
-            actor.x,
-            actor.y - 5,
-          );
+          ctx.fillText(actor.user.name, actor.x, actor.y - 5);
         }
       }
 
