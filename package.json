@@ -14,9 +14,9 @@
     "test": "bun test",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
-    "db:migrate": "bun src/db/migrate.ts",
-    "db:seed": "bun src/db/seed.ts",
-    "db:check": "bun src/db/check.ts"
+    "db:migrate": "bun src/db/script/migrate.ts",
+    "db:seed": "bun src/db/script/seed.ts",
+    "db:check": "bun src/db/script/check.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
