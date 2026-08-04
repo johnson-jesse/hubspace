@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { expect } from "chai";
 import request from "supertest";
 import { createTestApp } from "./helpers/create-test-app.js";
 
@@ -7,10 +7,10 @@ describe("GET /health", () => {
     const { app } = createTestApp();
     const response = await request(app).get("/health").expect(200);
 
-    expect(response.body).toEqual({
+    expect(response.body).to.deep.equal({
       status: "ok",
-      service: "nesws",
-      version: "0.1.0",
+      service: "hubspace",
+      version: "0.2.0",
     });
   });
 });

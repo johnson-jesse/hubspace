@@ -8,18 +8,17 @@ export function createUserService(
 ): UserService {
   return {
     async registerUser(name: string, email: string, password: string) {
-      const existingUser = userRepository.findUserByEmail(email);
+      const existingUser = await userRepository.findUserByEmail(email);
 
       if (existingUser) {
         throw new AppError("User already exists", 409, "EMAIL_EXISTS");
       }
 
       const passwordHash = await passwordHasher.hash(password);
-
       return userRepository.createUser(name, email, passwordHash);
     },
-    getUserById(id: number) {
-      const user = userRepository.findUserById(id);
+    async getUserById(id: number) {
+      const user = await userRepository.findUserById(id);
 
       if (!user) {
         throw new AppError("User not found", 404, "USER_NOT_FOUND");

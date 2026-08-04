@@ -1,4 +1,5 @@
 {
+  "version": "0.2.1",
   "name": "hubspace",
   "type": "module",
   "private": true,
@@ -8,39 +9,63 @@
     "node": ">=24"
   },
   "scripts": {
-    "dev": "bun --watch src/server.ts",
-    "start": "bun run db:migrate && bun run db:seed && bun run db:check && bun src/server.ts",
-    "build": "echo 'No build step'",
-    "test": "bun test",
+    "setup": "tsx setup.ts && npm run db:generate && npm run db:migrate && npm run test",
+    "dev": "tsx watch src/server.ts",
+    "start": "npm run db:migrate:deploy && npm run db:seed && npm run db:check && tsx src/server.ts",
+    "build": "npm run db:generate",
+    "test": "mocha --require tsx --require ./tests/helpers/setup-db.ts \"tests/**/*.test.ts\"",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
-    "db:migrate": "bun src/db/script/migrate.ts",
-    "db:seed": "bun src/db/script/seed.ts",
-    "db:check": "bun src/db/script/check.ts"
+    "db:seed": "tsx src/db/cli/seed.ts",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "db:check": "tsx src/db/cli/check.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/bun": "latest",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/chai": "^5.2.3",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.1.2",
     "@types/supertest": "^7.2.1",
     "@types/ws": "^8.18.1",
+    "chai": "^6.2.2",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-chai-friendly": "^1.2.1",
     "globals": "^17.8.0",
     "jiti": "^2.7.0",
     "prettier": "3.9.6",
+    "prisma": "^7.9.1",
     "supertest": "^7.2.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.5",
     "typescript-eslint": "^8.65.0"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "@types/mocha": "^10.0.10",
     "argon2": "^0.45.1",
+    "better-sqlite3": "^13.0.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "mocha": "^11.8.0",
     "ws": "^8.21.1"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true,
+    "better-sqlite3@13.0.2": true,
+    "@prisma/engines@7.9.1": true,
+    "argon2@0.45.1": true,
+    "prisma@7.9.1": true,
+    "esbuild@0.28.1": true,
+    "fsevents@2.3.3": true
   }
 }

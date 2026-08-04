@@ -1,5 +1,5 @@
 import { createPasswordHasher } from "../../auth/password-hasher";
-import { db } from "../connection";
+import { prisma } from "../prisma";
 
 const passwordHasher = createPasswordHasher();
 
@@ -24,18 +24,18 @@ async function seed() {
   for (const user of users) {
     const passwordHash = await passwordHasher.hash(user.password);
 
-    console.log(`Seeding ${user.name}, ${user.email}`);
+    const data = {
+      name: user.name,
+      email: user.email,
+      passwordHash: "{removed}",
+    };
 
-    db.query(
-      `
-    INSERT INTO users (
-      name,
-      email,
-      password_hash
-    )
-    VALUES (?, ?, ?)
-  `,
-    ).run(user.name, user.email, passwordHash);
+    console.log(`\nSeeding user:`);
+    console.table(data);
+
+    data["passwordHash"] = passwordHash;
+
+    prisma.user.create({ data });
   }
 }
 

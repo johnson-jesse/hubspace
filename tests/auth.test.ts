@@ -1,6 +1,6 @@
-import { describe, expect, it } from "bun:test";
 import request from "supertest";
 import { createTestApp } from "./helpers/create-test-app.js";
+import { expect } from "chai";
 
 describe("POST /api/auth/register", () => {
   const { app } = createTestApp();
@@ -15,7 +15,7 @@ describe("POST /api/auth/register", () => {
       })
       .expect(201);
 
-    expect(response.body.email).toBe("test@example.com");
-    expect(response.body.id).toBeDefined();
+    expect(response.body.email).to.equal("test@example.com");
+    expect(response.body.id).to.exist;
   });
 });

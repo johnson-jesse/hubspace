@@ -1,4 +1,4 @@
-import { Database } from "bun:sqlite";
+import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 
@@ -13,7 +13,7 @@ export function createDatabase(filename: string) {
 
   const db = new Database(filename);
 
-  db.run(`
+  db.exec(`
     PRAGMA journal_mode = WAL;
   `);
 

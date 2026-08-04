@@ -1,6 +1,6 @@
-import { describe, expect, it } from "bun:test";
 import request from "supertest";
 import { createTestApp } from "./helpers/create-test-app.js";
+import { expect } from "chai";
 
 describe("Authentication middleware", () => {
   it("rejects requests without a token", async () => {
@@ -8,6 +8,6 @@ describe("Authentication middleware", () => {
 
     const response = await request(app).get("/api/users/me");
 
-    expect(response.status).toBe(401);
+    expect(response.status).to.equal(401);
   });
 });
