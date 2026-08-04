@@ -1,8 +1,8 @@
 import type { PasswordHasher } from "../auth/password-hasher.type";
 import { AppError } from "../errors/app-errors";
-import type { AuthService } from "../types/auth.type";
-import type { TokenService } from "../types/token.type";
-import type { UserRepository } from "../types/user.type";
+import type { UserRepository } from "../repositories/user.repository.type";
+import type { AuthService } from "./auth.service.type";
+import type { TokenService } from "./token.type";
 
 export function createAuthService(
   userRepository: UserRepository,
@@ -11,7 +11,7 @@ export function createAuthService(
 ): AuthService {
   return {
     async login(email, password) {
-      const user = await userRepository.findUserByEmail(email);
+      const user = await userRepository.findUserForAuth(email);
 
       if (!user) {
         throw new AppError("Invalid credentials", 401, "INVALID_CREDENTIALS");

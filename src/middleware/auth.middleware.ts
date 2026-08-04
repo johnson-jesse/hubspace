@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import type { TokenService } from "../types/token.type";
+import type { TokenService } from "../services/token.type";
 
 export function createAuthMiddleware(tokenService: TokenService) {
   return function requireAuth(req: Request, res: Response, next: NextFunction) {

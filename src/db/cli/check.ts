@@ -6,6 +6,7 @@ async function main() {
       id: true,
       name: true,
       email: true,
+      color: true,
     },
   });
 

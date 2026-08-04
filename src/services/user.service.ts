@@ -1,6 +1,7 @@
 import type { PasswordHasher } from "../auth/password-hasher.type";
 import { AppError } from "../errors/app-errors";
-import type { UserRepository, UserService } from "../types/user.type";
+import type { UserRepository } from "../repositories/model";
+import type { UserService } from "./user.service.type";
 
 export function createUserService(
   userRepository: UserRepository,

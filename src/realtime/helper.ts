@@ -4,7 +4,7 @@ import {
   SPAWN_PADDING,
   WORLD_HEIGHT,
   WORLD_WIDTH,
-} from "../types/world.type";
+} from "./world.type";
 
 export function randomActorColor(): string {
   return (

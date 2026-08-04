@@ -2,7 +2,7 @@ import crypto from "crypto";
 import type { Server } from "http";
 import { WebSocket, WebSocketServer } from "ws";
 
-import type { TokenService } from "../types/token.type";
+import type { TokenService } from "../services/token.type";
 import { presenceManager } from "./presence-manager";
 import { World } from "./world";
 import { userService } from "../container";

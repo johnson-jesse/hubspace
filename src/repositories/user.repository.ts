@@ -2,7 +2,11 @@ import type {
   PrismaClient,
   User,
 } from "../../generated/prisma/client/client.ts";
-import type { UserRepository } from "../types/user.type.ts";
+import {
+  publicUserSelect,
+  type PublicUser,
+  type UserRepository,
+} from "./user.repository.type.ts";
 
 export function createUserRepository(prisma: PrismaClient): UserRepository {
   return {
@@ -10,23 +14,32 @@ export function createUserRepository(prisma: PrismaClient): UserRepository {
       name: string,
       email: string,
       passwordHash: string,
-    ): Promise<User> {
+    ): Promise<PublicUser> {
       return prisma.user.create({
         data: {
           name,
           email,
           passwordHash,
         },
+        select: publicUserSelect,
       });
     },
-    findUserByEmail: function (email: string): Promise<User | null> {
+    findUserForAuth: function (email: string): Promise<User | null> {
       return prisma.user.findUnique({
         where: { email },
+        /* RETURNING PASSWORD */
       });
     },
-    findUserById: function (id: number): Promise<User | null> {
+    findUserByEmail: function (email: string): Promise<PublicUser | null> {
+      return prisma.user.findUnique({
+        where: { email },
+        select: publicUserSelect,
+      });
+    },
+    findUserById: function (id: number): Promise<PublicUser | null> {
       return prisma.user.findUnique({
         where: { id },
+        select: publicUserSelect,
       });
     },
   };

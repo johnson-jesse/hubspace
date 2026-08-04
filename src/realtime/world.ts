@@ -1,11 +1,11 @@
-import type { User } from "../../generated/prisma/client/client";
-import type { Actor } from "../types/actor.type";
+import type { PublicUser } from "../repositories/model";
+import type { Actor } from "./actor.type";
 import { randomActorColor, randomPosition } from "./helper";
 
 export class World {
   private actors = new Map<string, Actor>();
 
-  addActor(id: string, user: User) {
+  addActor(id: string, user: PublicUser) {
     const position = randomPosition();
 
     const actor: Actor = {

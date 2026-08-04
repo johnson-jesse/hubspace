@@ -4,7 +4,7 @@ import { errorMiddleware } from "./middleware/error.middleware";
 import { notFoundMiddleware } from "./middleware/not-found.middleware";
 import createAuthRoutes from "./routes/auth.routes";
 import createUserRoutes from "./routes/user.routes";
-import type { AppDependencies } from "./types/type";
+import type { AppDependencies } from "./type";
 
 export function createApp(dependencies: AppDependencies) {
   const app = express();
