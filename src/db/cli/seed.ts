@@ -14,7 +14,7 @@ const users: {
     password: "1234",
   },
   {
-    name: "Jesse Johnson",
+    name: "Jesse",
     email: "jesseajohnson@pm.me",
     password: "2345",
   },
@@ -27,16 +27,23 @@ async function seed() {
     const data = {
       name: user.name,
       email: user.email,
-      passwordHash: "{removed}",
+      passwordHash,
     };
 
     console.log(`\nSeeding user:`);
-    console.table(data);
+    console.table({
+      ...data,
+      passwordHash: "{removed}",
+    });
 
-    data["passwordHash"] = passwordHash;
-
-    prisma.user.create({ data });
+    await prisma.user.create({ data });
   }
+
+  await prisma.$disconnect();
 }
 
-seed();
+seed().catch(async (e) => {
+  console.error(e);
+  await prisma.$disconnect();
+  process.exit(1);
+});

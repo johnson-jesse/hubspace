@@ -1,5 +1,5 @@
+import type { User } from "../../generated/prisma/client/client";
 import type { Actor } from "../types/actor.type";
-import type { User } from "../types/user.type";
 import { randomActorColor, randomPosition } from "./helper";
 
 export class World {

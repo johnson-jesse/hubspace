@@ -40,7 +40,7 @@ export function createWebSocketServer(
     let actorId: string | null = null;
     let authenticated = false;
 
-    socket.on("message", (raw) => {
+    socket.on("message", async (raw) => {
       const message = JSON.parse(raw.toString());
 
       switch (message.type) {
@@ -50,7 +50,7 @@ export function createWebSocketServer(
 
             try {
               const payload = tokenService.verify(message.token);
-              const user = userService.getUserById(payload.userId);
+              const user = await userService.getUserById(payload.userId);
               authenticated = true;
               actorId = crypto.randomUUID();
               const actor = world.addActor(actorId, user);
