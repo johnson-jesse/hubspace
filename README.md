@@ -1,6 +1,6 @@
 # Hubspace
 
-A real-time multi-person collaboration space built with **TypeScript**, **Node.js**, **Express**, **WebSockets**, **Prisma**, and **SQLite**.
+A real-time multi-person collaboration space built with **TypeScript**, **Express**, **WebSockets**, **Prisma**, and **SQLite**.
 
 ## Try It Live
 
@@ -14,22 +14,23 @@ HubSpace is a lightweight realtime web application where authenticated users can
 
 The project demonstrates:
 
-- User registration and authentication
-- Password hashing with Argon2
-- JWT-based authentication
-- Express REST API design
-- WebSocket realtime communication
-- Server-side state management
-- Prisma ORM with SQLite persistence
-- Database migrations
-- Dependency injection and layered architecture
-- Deployment as a production web service
+* User registration and authentication
+* Password hashing with Argon2
+* JWT-based authentication
+* Express REST API design
+* WebSocket realtime communication
+* Dependency injection
+* Layered backend architecture
+* Prisma ORM with SQLite persistence
+* Database migrations
+* Integration testing with Mocha, Chai, and Supertest
+* Production deployment
 
 ## Application Architecture
 
 Hubspace uses a layered backend architecture designed to separate HTTP concerns, business logic, persistence, and realtime communication.
 
-```text
+```
 Client
  |
  | HTTP / WebSocket
@@ -68,9 +69,9 @@ Responsible for defining application endpoints and connecting requests to contro
 
 Examples:
 
-- Authentication routes
-- User routes
-- Health check routes
+* Authentication routes
+* User routes
+* Health check routes
 
 Routes do not contain business logic.
 
@@ -82,10 +83,10 @@ Responsible for handling HTTP requests and responses.
 
 Responsibilities:
 
-- Extract request data
-- Call service methods
-- Return responses
-- Translate application errors into HTTP responses
+* Extract request data
+* Call service methods
+* Return responses
+* Translate application errors into HTTP responses
 
 Controllers remain thin and delegate work to services.
 
@@ -97,43 +98,45 @@ Contains the core application logic.
 
 Examples:
 
-- User registration
-- User authentication
-- Password verification
-- Token generation
-- User management workflows
+* User registration
+* User authentication
+* Password verification
+* Token generation
+* User management workflows
 
-Services coordinate operations without knowing HTTP or database implementation details.
+Services coordinate operations without knowing HTTP details.
 
 ---
 
 ### Repositories
 
-Responsible for abstracting persistence operations.
+Responsible for database access.
 
 Responsibilities:
 
-- Creating records
-- Finding users
-- Updating data
-- Managing database queries
+* Creating records
+* Finding users
+* Updating data
+* Executing database operations through Prisma
 
-Repositories isolate Prisma implementation details from the rest of the application and allow persistence concerns to change without affecting business logic.
+Repositories isolate persistence details from the rest of the application.
 
 ---
 
 ### Database Layer
 
-SQLite provides persistent storage through Prisma ORM.
+Hubspace uses Prisma ORM with SQLite for persistent storage.
 
 Responsibilities:
 
-- User data
-- Password hashes
-- Application persistence
-- Database schema migrations
+* User data
+* Password hashes
+* Application persistence
+* Schema migrations
 
 Database changes are managed through Prisma migrations.
+
+Prisma-generated types are used as the source of truth for database models.
 
 ---
 
@@ -143,123 +146,267 @@ The realtime system runs independently from the REST API flow.
 
 Responsibilities:
 
-- Maintain WebSocket connections
-- Authenticate connected clients
-- Track active participants
-- Broadcast world updates
-- Synchronize connected users
+* Maintain WebSocket connections
+* Authenticate connected clients
+* Track active actors
+* Broadcast world updates
+* Synchronize connected users
 
 The WebSocket layer shares application services while maintaining its own realtime state.
 
+---
+
 ## Dependency Injection
 
-Application dependencies are created centrally and passed into application layers.
+Application dependencies are created externally and passed into application layers.
 
-This keeps components loosely coupled and makes individual services easier to test, replace, and maintain.
+Examples:
 
-Examples of injected dependencies:
+* Database clients
+* Repositories
+* Authentication services
+* Token services
 
-- User services
-- Authentication services
-- Repositories
-- Token services
-- Realtime managers
+This keeps components loosely coupled and allows production and test environments to use different implementations.
+
+---
+
+## Testing
+
+Hubspace uses:
+
+* Mocha
+* Chai
+* Supertest
+
+Tests cover:
+
+* REST endpoint behavior
+* Authentication workflows
+* Repository operations
+* Database integration
+
+The test suite uses a dedicated SQLite database with Prisma migrations applied before testing.
+
+The schema is shared between tests while test data is reset between runs.
+
+Run tests:
+
+```
+npm run test
+```
+
+---
 
 ## Tech Stack
 
 ### Backend
 
-- TypeScript
-- Node.js
-- Express
-- WebSockets
-- Prisma ORM
-- SQLite
-- Argon2 password hashing
-- JWT authentication
+* TypeScript
+* Node.js
+* Express
+* Prisma ORM
+* SQLite
+* WebSockets
+* Argon2 password hashing
+* JWT authentication
 
 ### Frontend
 
-- HTML
-- JavaScript
-- Canvas rendering
+* HTML
+* JavaScript
+* Canvas rendering
+
+### Testing
+
+* Mocha
+* Chai
+* Supertest
 
 ### Deployment
 
-- Render Web Service
+* Render Web Service
+
+---
 
 ## Project Goals
 
-Hubspace is a learning project focused on building a complete realtime application from the ground up, including authentication, networking, persistence, testing, and deployment.
+Hubspace is a learning project focused on building a complete realtime application from the ground up.
 
-The project emphasizes:
+The project explores:
 
-- Clean backend architecture
-- Separation of concerns
-- Testable application design
-- Real-time communication patterns
-- Practical Node.js development
+* Backend architecture
+* Authentication systems
+* Database design
+* ORM usage
+* WebSocket communication
+* Testing strategies
+* Dependency injection
+* Production deployment
+
+---
 
 # Getting Started Locally
 
+## Requirements
+
+* Node.js 24+
+* npm
+
+---
+
+## Installation
+
 Install dependencies:
 
-```bash
+```
 npm install
 ```
 
-Generate the Prisma client:
+---
 
-```bash
+## Setup
+
+Create environment files and required directories:
+
+```
+npm run setup
+```
+
+This creates:
+
+* `.env`
+* `.env.test`
+* `data/`
+
+Existing files are preserved.
+
+---
+
+## Generate Prisma Client
+
+```
 npm run db:generate
 ```
 
-Run database migrations:
+---
 
-```bash
+## Database Setup
+
+Apply migrations:
+
+```
 npm run db:migrate
 ```
 
-Start the development server:
+Prisma will create the SQLite database file automatically.
 
-```bash
+Development database:
+
+```
+data/hubspace.sqlite
+```
+
+Test database:
+
+```
+data/hubspace-test.sqlite
+```
+
+---
+
+## Running the Application
+
+Development mode:
+
+```
 npm run dev
 ```
 
-Run tests:
+---
 
-```bash
-npm test
+## Running Tests
+
 ```
+npm run test
+```
+
+---
 
 ## Database Commands
 
 Generate Prisma client:
 
-```bash
+```
 npm run db:generate
 ```
 
-Create and apply migrations:
+Run migrations:
 
-```bash
+```
 npm run db:migrate
 ```
 
 Open Prisma Studio:
 
-```bash
+```
 npm run db:studio
 ```
 
-Seed the database:
+Check database:
 
-```bash
-npm run db:seed
 ```
-
-Check database state:
-
-```bash
 npm run db:check
 ```
+
+---
+
+## Environment Variables
+
+Example development environment:
+
+```
+DATABASE_URL="file:./data/hubspace.sqlite"
+JWT_SECRET="development-secret"
+PORT=3000
+```
+
+Example test environment:
+
+```
+DATABASE_URL="file:./data/hubspace-test.sqlite"
+JWT_SECRET="test-secret"
+PORT=3001
+```
+
+---
+
+## Project Structure
+
+```
+src
+ |
+ ├── auth
+ ├── controllers
+ ├── middleware
+ ├── repositories
+ ├── services
+ ├── db
+ │    ├── migrations
+ │    └── prisma.ts
+ ├── websocket
+ └── app.ts
+
+
+tests
+ |
+ ├── auth
+ ├── repositories
+ └── helpers
+```
+
+---
+
+## License
+
+MIT
