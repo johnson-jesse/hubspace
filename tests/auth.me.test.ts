@@ -1,6 +1,6 @@
-import { describe, expect, it } from "bun:test";
 import request from "supertest";
 import { createTestApp } from "./helpers/create-test-app.js";
+import { expect } from "chai";
 
 describe("POST /api/auth/me", () => {
   it("returns the current user", async () => {
@@ -28,6 +28,6 @@ describe("POST /api/auth/me", () => {
       .set("Authorization", `Bearer ${login.body.token}`)
       .expect(200);
 
-    expect(response.body.user.email).toBe("test@example.com");
+    expect(response.body.user.email).to.be.equal("test@example.com");
   });
 });

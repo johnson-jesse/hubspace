@@ -1,47 +1,33 @@
-import type { Database } from "bun:sqlite";
-import type { User, UserRepository } from "../types/user.type";
+import type {
+  PrismaClient,
+  User,
+} from "../../generated/prisma/client/client.ts";
+import type { UserRepository } from "../types/user.type.ts";
 
-export function createUserRepository(db: Database): UserRepository {
+export function createUserRepository(prisma: PrismaClient): UserRepository {
   return {
-    createUser(name: string, email: string, passwordHash: string): User {
-      const result = db
-        .prepare(
-          `
-          INSERT INTO users (
-            name,
-            email,
-            password_hash
-          )
-          VALUES (?, ?, ?)
-        `,
-        )
-        .run(name, email, passwordHash);
-
-      return this.findUserById(Number(result.lastInsertRowid))!;
+    createUser: function (
+      name: string,
+      email: string,
+      passwordHash: string,
+    ): Promise<User> {
+      return prisma.user.create({
+        data: {
+          name,
+          email,
+          passwordHash,
+        },
+      });
     },
-
-    findUserByEmail(email: string): User | undefined {
-      return db
-        .query(
-          `
-          SELECT *
-          FROM users
-          WHERE email = ?
-        `,
-        )
-        .get(email) as User | undefined;
+    findUserByEmail: function (email: string): Promise<User | null> {
+      return prisma.user.findUnique({
+        where: { email },
+      });
     },
-
-    findUserById(id: number): User | undefined {
-      return db
-        .query(
-          `
-          SELECT *
-          FROM users
-          WHERE id = ?
-        `,
-        )
-        .get(id) as User | undefined;
+    findUserById: function (id: number): Promise<User | null> {
+      return prisma.user.findUnique({
+        where: { id },
+      });
     },
   };
 }

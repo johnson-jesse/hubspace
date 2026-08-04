@@ -1,23 +1,22 @@
-import { db } from "../connection";
+import { prisma } from "../prisma";
 
-const tables = db
-  .query(
-    `
-    SELECT name
-    FROM sqlite_master
-    WHERE type = 'table'
-  `,
-  )
-  .all();
+async function main() {
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
 
-console.log(tables);
-console.log(
-  db
-    .query(
-      `
-    SELECT id, name, email
-    FROM users
-  `,
-    )
-    .all(),
-);
+  console.log(users);
+}
+
+main()
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

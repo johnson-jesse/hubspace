@@ -1,4 +1,5 @@
-import { describe, expect, it } from "bun:test";
+import { expect } from "chai";
+import { describe } from "mocha";
 import request from "supertest";
 import { createTestApp } from "./helpers/create-test-app.js";
 
@@ -23,6 +24,6 @@ describe("POST /api/auth/login", () => {
       })
       .expect(200);
 
-    expect(response.body.token).toBeDefined();
+    expect(response.body.token).to.exist;
   });
 });

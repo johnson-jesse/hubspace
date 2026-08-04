@@ -1,12 +1,12 @@
 # Hubspace
 
-A real-time multi person collaboration space built with **TypeScript**, **Express**, **WebSockets**, and **SQLite**.
+A real-time multi-person collaboration space built with **TypeScript**, **Node.js**, **Express**, **WebSockets**, **Prisma**, and **SQLite**.
 
 ## Try It Live
 
 🌎 https://hubspace.onrender.com
 
-Please be patient while the free service spins up. Then, create an account, log in, and join the shared realtime space. User accounts reset daily
+Please be patient while the free service spins up. Then, create an account, log in, and join the shared realtime space. User accounts reset daily.
 
 ## Overview
 
@@ -20,7 +20,9 @@ The project demonstrates:
 - Express REST API design
 - WebSocket realtime communication
 - Server-side state management
-- SQLite persistence with migrations
+- Prisma ORM with SQLite persistence
+- Database migrations
+- Dependency injection and layered architecture
 - Deployment as a production web service
 
 ## Application Architecture
@@ -44,6 +46,9 @@ Services
 Repositories
  |
  v
+Prisma ORM
+ |
+ v
 SQLite Database
 
 
@@ -62,6 +67,7 @@ SQLite Database
 Responsible for defining application endpoints and connecting requests to controllers.
 
 Examples:
+
 - Authentication routes
 - User routes
 - Health check routes
@@ -75,6 +81,7 @@ Routes do not contain business logic.
 Responsible for handling HTTP requests and responses.
 
 Responsibilities:
+
 - Extract request data
 - Call service methods
 - Return responses
@@ -89,41 +96,44 @@ Controllers remain thin and delegate work to services.
 Contains the core application logic.
 
 Examples:
+
 - User registration
 - User authentication
 - Password verification
 - Token generation
 - User management workflows
 
-Services coordinate operations without knowing HTTP details.
+Services coordinate operations without knowing HTTP or database implementation details.
 
 ---
 
 ### Repositories
 
-Responsible for database access.
+Responsible for abstracting persistence operations.
 
 Responsibilities:
+
 - Creating records
 - Finding users
 - Updating data
-- Executing queries
+- Managing database queries
 
-Repositories isolate SQLite implementation details from the rest of the application.
+Repositories isolate Prisma implementation details from the rest of the application and allow persistence concerns to change without affecting business logic.
 
 ---
 
 ### Database Layer
 
-SQLite provides persistent storage.
+SQLite provides persistent storage through Prisma ORM.
 
 Responsibilities:
+
 - User data
 - Password hashes
-- Migration tracking
-- Application state persistence
+- Application persistence
+- Database schema migrations
 
-Database changes are managed through migrations.
+Database changes are managed through Prisma migrations.
 
 ---
 
@@ -132,9 +142,10 @@ Database changes are managed through migrations.
 The realtime system runs independently from the REST API flow.
 
 Responsibilities:
+
 - Maintain WebSocket connections
 - Authenticate connected clients
-- Track active actors
+- Track active participants
 - Broadcast world updates
 - Synchronize connected users
 
@@ -142,17 +153,27 @@ The WebSocket layer shares application services while maintaining its own realti
 
 ## Dependency Injection
 
-Application dependencies are created centrally and passed into the application layers.
+Application dependencies are created centrally and passed into application layers.
 
-This keeps components loosely coupled and makes individual services easier to test and replace.
+This keeps components loosely coupled and makes individual services easier to test, replace, and maintain.
+
+Examples of injected dependencies:
+
+- User services
+- Authentication services
+- Repositories
+- Token services
+- Realtime managers
 
 ## Tech Stack
 
 ### Backend
 
 - TypeScript
+- Node.js
 - Express
 - WebSockets
+- Prisma ORM
 - SQLite
 - Argon2 password hashing
 - JWT authentication
@@ -169,20 +190,76 @@ This keeps components loosely coupled and makes individual services easier to te
 
 ## Project Goals
 
-Hubspace is a learning project focused on building a complete realtime application from the ground up, including authentication, networking, persistence, and deployment.
+Hubspace is a learning project focused on building a complete realtime application from the ground up, including authentication, networking, persistence, testing, and deployment.
+
+The project emphasizes:
+
+- Clean backend architecture
+- Separation of concerns
+- Testable application design
+- Real-time communication patterns
+- Practical Node.js development
 
 # Getting Started Locally
 
-To install dependencies:
+Install dependencies:
 
 ```bash
-bun install
+npm install
 ```
 
-To run:
+Generate the Prisma client:
 
 ```bash
-bun run index.ts
+npm run db:generate
 ```
 
-This project was created using `bun init` in bun v1.3.14. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+Run database migrations:
+
+```bash
+npm run db:migrate
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Run tests:
+
+```bash
+npm test
+```
+
+## Database Commands
+
+Generate Prisma client:
+
+```bash
+npm run db:generate
+```
+
+Create and apply migrations:
+
+```bash
+npm run db:migrate
+```
+
+Open Prisma Studio:
+
+```bash
+npm run db:studio
+```
+
+Seed the database:
+
+```bash
+npm run db:seed
+```
+
+Check database state:
+
+```bash
+npm run db:check
+```

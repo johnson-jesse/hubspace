@@ -1,4 +1,4 @@
-import type { User } from "./user.type";
+import type { User } from "../../generated/prisma/client/client";
 
 export interface Actor {
   id: string;

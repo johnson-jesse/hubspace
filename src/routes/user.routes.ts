@@ -7,8 +7,12 @@ export default function createUserRoutes(dependencies: AppDependencies) {
 
   const requireAuth = createAuthMiddleware(dependencies.tokenService);
 
-  router.get("/me", requireAuth, (req, res) => {
-    const user = dependencies.userService.getUserById(req.user!.userId);
+  router.get("/me", requireAuth, async (req, res) => {
+    const user = await dependencies.userService.getUserById(req.user!.userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
 
     res.json({
       user: {

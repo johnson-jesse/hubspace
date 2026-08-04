@@ -20,8 +20,8 @@ export function createApp(dependencies: AppDependencies) {
   app.get("/health", (_req, res) => {
     res.json({
       status: "ok",
-      service: "nesws",
-      version: "0.1.0",
+      service: "hubspace",
+      version: "0.2.0",
     });
   });
 

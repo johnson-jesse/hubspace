@@ -11,13 +11,13 @@ export function createAuthService(
 ): AuthService {
   return {
     async login(email, password) {
-      const user = userRepository.findUserByEmail(email);
+      const user = await userRepository.findUserByEmail(email);
 
       if (!user) {
         throw new AppError("Invalid credentials", 401, "INVALID_CREDENTIALS");
       }
 
-      const valid = await passwordHasher.verify(password, user.password_hash);
+      const valid = await passwordHasher.verify(password, user.passwordHash);
 
       if (!valid) {
         throw new AppError("Invalid credentials", 401, "INVALID_CREDENTIALS");
