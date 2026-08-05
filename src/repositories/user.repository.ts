@@ -42,5 +42,16 @@ export function createUserRepository(prisma: PrismaClient): UserRepository {
         select: publicUserSelect,
       });
     },
+    async updateColor(userId: number, color: string) {
+      return prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          color,
+        },
+        select: publicUserSelect,
+      });
+    },
   };
 }

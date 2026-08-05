@@ -12,7 +12,7 @@ export class World {
       id,
       x: position.x,
       y: position.y,
-      color: randomActorColor(),
+      color: user.color || randomActorColor(),
       user,
     };
 
@@ -30,6 +30,18 @@ export class World {
 
     actor.x = x;
     actor.y = y;
+
+    return actor;
+  }
+
+  updateColor(id: string, color: string) {
+    const actor = this.actors.get(id);
+
+    if (!actor) {
+      return;
+    }
+
+    actor.color = color;
 
     return actor;
   }

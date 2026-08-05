@@ -25,4 +25,6 @@ export interface UserRepository {
   findUserForAuth(email: string): Promise<User | null>;
   findUserByEmail(email: string): Promise<PublicUser | null>;
   findUserById(id: number): Promise<PublicUser | null>;
+
+  updateColor(id: number, color: string): Promise<PublicUser | null>;
 }

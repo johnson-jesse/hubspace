@@ -27,5 +27,8 @@ export function createUserService(
 
       return user;
     },
+    async updateColor(id: number, color: string) {
+      return await userRepository.updateColor(id, color);
+    },
   };
 }

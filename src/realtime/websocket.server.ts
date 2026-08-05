@@ -122,6 +122,23 @@ export function createWebSocketServer(
             });
           }
           break;
+
+        case "actorColor":
+          {
+            if (!actorId) {
+              return;
+            }
+
+            const actor = world.updateColor(actorId, message.color);
+
+            if (actor) {
+              broadcast({
+                type: "actorColor",
+                actor,
+              });
+            }
+          }
+          break;
       }
     });
 

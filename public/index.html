@@ -67,7 +67,6 @@
       let myActor = null;
 
       function draw() {
-        console.log("users", actors);
         // Clear old frame
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -76,15 +75,6 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         for (const actor of actors.values()) {
-          // // Actor fill
-          // ctx.fillStyle = actor.color;
-          // ctx.fillRect(actor.x, actor.y, 30, 30);
-
-          // // Actor border
-          // ctx.strokeStyle = "#000000";
-          // ctx.lineWidth = 2;
-          // ctx.strokeRect(actor.x, actor.y, 30, 30);
-
           ctx.fillStyle = actor.color;
           ctx.fillRect(actor.x, actor.y, 30, 30);
 
@@ -210,7 +200,6 @@
 
         socket.onmessage = (event) => {
           const message = JSON.parse(event.data);
-          console.log(message);
           handleMessage(message);
         };
 
@@ -256,6 +245,15 @@
             }
             break;
 
+          case "actorColor":
+            {
+              const actor = actors.get(message.actor.id);
+              if (actor) actor.color = message.actor.color;
+
+              draw();
+            }
+            break;
+
           case "actorRemoved":
             actors.delete(message.id);
             draw();
@@ -272,15 +270,62 @@
       }
 
       function updateUserList(users) {
+        const colors = [
+          "#ef4444",
+          "#f97316",
+          "#eab308",
+          "#22c55e",
+          "#3b82f6",
+          "#8b5cf6",
+          "#ec4899",
+        ];
         const list = document.getElementById("user-list");
 
         list.innerHTML = "";
 
         for (const user of users) {
           const item = document.createElement("li");
+          const dot = document.createElement("span");
+          dot.style.width = "10px";
+          dot.style.height = "10px";
+          dot.style.borderRadius = "50%";
+          dot.style.backgroundColor = user.color ?? "gray";
+          dot.style.display = "inline-block";
 
-          item.textContent = `🟢 ${user.email}`;
+          if (myActor.user.id === user.userId) {
+            dot.style.cursor = "pointer";
+            dot.addEventListener("click", () => {
+              const randomColor =
+                colors[Math.floor(Math.random() * colors.length)];
 
+              dot.style.backgroundColor = randomColor;
+
+              const token = localStorage.getItem("token");
+              fetch("/api/users/me/color", {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                  color: randomColor,
+                }),
+              });
+
+              socket.send(
+                JSON.stringify({
+                  type: "actorColor",
+                  color: randomColor,
+                }),
+              );
+            });
+          }
+
+          const email = document.createElement("span");
+          email.textContent = ` ${user.email}`;
+
+          item.appendChild(dot);
+          item.appendChild(email);
           list.appendChild(item);
         }
       }
