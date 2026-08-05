@@ -1,5 +1,5 @@
 import request from "supertest";
-import { createTestApp } from "./helpers/create-test-app.js";
+import { createTestApp } from "./helpers/test-app.js";
 import { expect } from "chai";
 
 describe("POST /api/auth/register", () => {

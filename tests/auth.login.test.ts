@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { describe } from "mocha";
 import request from "supertest";
-import { createTestApp } from "./helpers/create-test-app.js";
+import { createTestApp } from "./helpers/test-app.js";
 
 describe("POST /api/auth/login", () => {
   it("authenticates an existing user", async () => {

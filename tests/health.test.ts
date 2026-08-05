@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import request from "supertest";
-import { createTestApp } from "./helpers/create-test-app.js";
+import { createTestApp } from "./helpers/test-app.js";
 
 describe("GET /health", () => {
   it("returns service health", async () => {

@@ -1,0 +1,8 @@
+{
+  "require": [
+    "tsx",
+    "./tests/helpers/load-env.ts",
+    "./tests/helpers/setup-db.ts"
+  ],
+  "spec": "tests/**/*.test.ts"
+}

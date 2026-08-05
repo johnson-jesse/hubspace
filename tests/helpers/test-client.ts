@@ -1,2 +1,2 @@
-import { createTestPrisma } from "./test-prisma.js";
+import { createTestPrisma } from "./test-db.js";
 export const prisma = createTestPrisma();

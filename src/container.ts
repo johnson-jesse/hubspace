@@ -1,5 +1,5 @@
 import { createPasswordHasher } from "./auth/password-hasher";
-import { env } from "./config/env";
+import { env } from "../env";
 import { prisma } from "./db/prisma";
 import { createUserRepository } from "./repositories/user.repository";
 import { createAuthService } from "./services/auth.service";

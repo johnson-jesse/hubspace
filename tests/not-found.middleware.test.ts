@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import request from "supertest";
-import { createTestApp } from "./helpers/create-test-app.js";
+import { createTestApp } from "./helpers/test-app.js";
 
 describe("404 handling", () => {
   it("returns a consistent error response", async () => {

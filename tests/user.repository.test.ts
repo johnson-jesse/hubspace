@@ -1,23 +1,22 @@
 import { expect } from "chai";
-import { createUserRepository } from "../src/repositories/user.repository.js";
-import { createTestDatabase } from "./helpers/test-db.ts";
+import { createTestApp } from "./helpers/test-app.ts";
 
 describe("User Repository", () => {
-  it("creates a user", async () => {
-    const db = createTestDatabase();
+  it("creates a user without exposing password hash", async () => {
+    const { userRepository: repo } = createTestApp()
 
-    const users = createUserRepository(db);
-
-    const user = await users.createUser(
+    const user = await repo.createUser(
       "Tester",
       "test@example.com",
-      "hashed_password",
+      "$3dafkl328u5y",
     );
 
     expect(user.email).to.equal("test@example.com");
+    expect(user).not.to.have.property("passwordHash");
 
-    const found = await users.findUserByEmail("test@example.com");
+    const found = await repo.findUserByEmail("test@example.com");
 
     expect(found?.id).to.equal(user.id);
+    expect(found).not.to.have.property("passwordHash");
   });
 });
