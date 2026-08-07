@@ -1,6 +1,6 @@
+import { expect } from "chai";
 import request from "supertest";
 import { createTestApp } from "./helpers/test-app.js";
-import { expect } from "chai";
 
 describe("POST /api/auth/me", () => {
   it("returns the current user", async () => {
@@ -24,10 +24,9 @@ describe("POST /api/auth/me", () => {
       .expect(200);
 
     const response = await request(app)
-      .get("/api/users/me")
+      .get("/api/user/me")
       .set("Authorization", `Bearer ${login.body.token}`)
       .expect(200);
-
-    expect(response.body.user.email).to.be.equal("test@example.com");
+    expect(response.body.email).to.be.equal("test@example.com");
   });
 });

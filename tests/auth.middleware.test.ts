@@ -6,7 +6,7 @@ describe("Authentication middleware", () => {
   it("rejects requests without a token", async () => {
     const { app } = createTestApp();
 
-    const response = await request(app).get("/api/users/me");
+    const response = await request(app).get("/api/user/me");
 
     expect(response.status).to.equal(401);
   });

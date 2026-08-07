@@ -24,6 +24,9 @@ export function createApp(dependencies: AppDependencies) {
     app.use("/api/user", createUserRoutes(dependencies));
   }
 
+  // API 404
+  app.use("/api", notFoundMiddleware);
+
   const clientPath = path.join(process.cwd(), "client", "dist");
   app.use(express.static(clientPath));
 
@@ -32,7 +35,6 @@ export function createApp(dependencies: AppDependencies) {
     res.sendFile(path.join(clientPath, "index.html"));
   });
 
-  app.use(notFoundMiddleware);
   app.use(errorMiddleware);
 
   return app;
