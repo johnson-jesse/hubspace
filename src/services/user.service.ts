@@ -1,6 +1,6 @@
 import type { PasswordHasher } from "../auth/password-hasher.type";
 import { AppError } from "../errors/app-errors";
-import type { UserRepository } from "../repositories/model";
+import type { UserRepository } from "../repositories/user.repository.type";
 import type { UserService } from "./user.service.type";
 
 export function createUserService(
@@ -29,6 +29,9 @@ export function createUserService(
     },
     async updateColor(id: number, color: string) {
       return await userRepository.updateColor(id, color);
+    },
+    async getUserFriends(id: number) {
+      return await userRepository.getFriends(id);
     },
   };
 }

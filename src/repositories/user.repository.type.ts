@@ -1,4 +1,5 @@
 import type { Prisma, User } from "../../generated/prisma/client/client";
+import type { PublicUser, UserFriends } from "../../shared/user";
 
 export const publicUserSelect = {
   id: true,
@@ -6,11 +7,7 @@ export const publicUserSelect = {
   email: true,
   color: true,
   createdAt: true,
-};
-
-export type PublicUser = Prisma.UserGetPayload<{
-  select: typeof publicUserSelect;
-}>;
+} satisfies Prisma.UserSelect;
 
 export interface UserRepository {
   createUser(
@@ -27,4 +24,5 @@ export interface UserRepository {
   findUserById(id: number): Promise<PublicUser | null>;
 
   updateColor(id: number, color: string): Promise<PublicUser | null>;
+  getFriends(id: number): Promise<UserFriends>;
 }

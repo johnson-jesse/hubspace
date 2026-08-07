@@ -11,6 +11,7 @@ export default function createUserRoutes(dependencies: AppDependencies) {
 
   router.get("/me", requireAuth, controller.getMe);
   router.patch("/me/color", requireAuth, controller.updateColor);
+  router.get("/friends", requireAuth, controller.getFriends);
 
   return router;
 }

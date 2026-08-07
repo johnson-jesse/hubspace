@@ -6,6 +6,10 @@ import {
   WORLD_WIDTH,
 } from "./world.type";
 
+/**
+ * 
+ * @deprecated
+ */
 export function randomActorColor(): string {
   return (
     ACTOR_COLORS[Math.floor(Math.random() * ACTOR_COLORS.length)] || "white"

@@ -8,16 +8,14 @@ import type { AppDependencies } from "./type";
 
 export function createApp(dependencies: AppDependencies) {
   const app = express();
-
   app.use(express.json());
-
   app.use(express.static(path.join(process.cwd(), "public")));
 
   app.get("/register", (_req, res) => {
     res.sendFile(path.join(process.cwd(), "public", "register.html"));
   });
 
-  app.get("/health", (_req, res) => {
+  app.get("/api/health", (_req, res) => {
     res.json({
       status: "ok",
       service: "hubspace",
@@ -27,8 +25,16 @@ export function createApp(dependencies: AppDependencies) {
 
   if (dependencies) {
     app.use("/api/auth", createAuthRoutes(dependencies));
-    app.use("/api/users", createUserRoutes(dependencies));
+    app.use("/api/user", createUserRoutes(dependencies));
   }
+
+  const clientPath = path.join(process.cwd(), "client", "dist");
+  app.use(express.static(clientPath));
+
+  // React Router fallback
+  app.get("/{*splat}", (_req, res) => {
+    res.sendFile(path.join(clientPath, "index.html"));
+  });
 
   app.use(notFoundMiddleware);
   app.use(errorMiddleware);
