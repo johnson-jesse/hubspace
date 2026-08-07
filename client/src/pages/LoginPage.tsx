@@ -29,6 +29,7 @@ export function LoginPage() {
     else {
       setLoading(false);
       setResult(d);
+      console.log("Failed:", d)
     }
   }
 
@@ -74,7 +75,7 @@ export function LoginPage() {
               )}
             </button>
           </form>
-          <p className={`${!result && "invisible"} ${result?.success ? "created" : "conflict"}`}>{result?.message || "|"}</p>
+          <p className={`${!result && "invisible"} ${result?.success ? "created" : "conflict"}`}>{result?.message || "Something didn't work right 😵"}</p>
         </div>
         <code>Or</code>
         <a role="button" className="action" href="/register">
