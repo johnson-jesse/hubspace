@@ -78,7 +78,7 @@ export function RegisterPage() {
               )}
             </button>
           </form>
-          {result && <p className={result.success ? "created" : "conflict"}>{result.message}</p>}
+          <p className={`${!result && "invisible"} ${result?.success ? "created" : "conflict"}`}>{result?.message || "|"}</p>
         </div>
         <code>Or</code>
         <a role="button" className="action" href="/login">

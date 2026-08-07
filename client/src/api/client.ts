@@ -1,27 +1,25 @@
 import type { PublicUser, UserFriends } from "../../../shared/user";
 import type { ResponsePayload } from "../../../shared/response";
 
-export async function apiFetch(url: string, { headers, ...options }: RequestInit = {}) {
+export async function apiFetch(
+  url: string,
+  { headers, ...options }: RequestInit = {},
+) {
   const token = sessionStorage.getItem("token");
   const h = new Headers(headers);
 
-  if (!(options.body instanceof FormData))
+  if (!(options.body instanceof FormData)) {
     h.set("Content-Type", "application/json");
-  if (token) h.set("Authorization", `Bearer ${token}`);
+  }
 
-  const response = await fetch(url, {
+  if (token) {
+    h.set("Authorization", `Bearer ${token}`);
+  }
+
+  return fetch(url, {
     ...options,
     headers: h,
   });
-
-  if (response.status === 401) {
-    sessionStorage.removeItem("token");
-
-    window.location.assign("/login");
-    throw new Error("Unauthorized");
-  }
-
-  return response;
 }
 
 export async function postLogin(
@@ -74,7 +72,7 @@ export async function postRegister(
   if (response.status === 409) {
     return {
       success: false,
-      message: "Hm.. Email already registered 😵‍💫"
+      message: "Hm.. Email already registered 😵‍💫",
     };
   }
 

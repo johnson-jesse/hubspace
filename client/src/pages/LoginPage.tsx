@@ -21,6 +21,7 @@ export function LoginPage() {
   const [result, setResult] = useState<LoginResult | null>(null);
 
   async function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
+    console.log("submit");
     event.preventDefault();
     setLoading(true);
     const d = await postLogin(form.email, form.password);
@@ -73,7 +74,7 @@ export function LoginPage() {
               )}
             </button>
           </form>
-          {result && <p>{result.message}</p>}
+          <p className={`${!result && "invisible"} ${result?.success ? "created" : "conflict"}`}>{result?.message || "|"}</p>
         </div>
         <code>Or</code>
         <a role="button" className="action" href="/register">

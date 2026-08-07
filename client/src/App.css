@@ -173,3 +173,7 @@ p.conflict {
   color: yellow;
   font-weight: 700;
 }
+
+p.invisible {
+  visibility: hidden;
+}

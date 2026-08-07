@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { UserService } from "../services/user.service.type";
 import type { AuthService } from "../services/auth.service.type";
+import type { UserService } from "../services/user.service.type";
 
 export function createAuthController(
   userService: UserService,
@@ -21,6 +21,7 @@ export function createAuthController(
     async login(req: Request, res: Response) {
       const { email, password } = req.body;
       const result = await authService.login(email, password);
+      console.log("result", result);
       res.json(result);
     },
   };
