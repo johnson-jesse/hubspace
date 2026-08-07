@@ -1,5 +1,5 @@
 import type { PasswordHasher } from "../auth/password-hasher.type";
-import { AppError } from "../errors/app-errors";
+import { InvalidCredentialsError } from "../errors/auth.errors";
 import type { UserRepository } from "../repositories/user.repository.type";
 import type { AuthService } from "./auth.service.type";
 import type { TokenService } from "./token.type";
@@ -14,13 +14,13 @@ export function createAuthService(
       const user = await userRepository.findUserForAuth(email);
 
       if (!user) {
-        throw new AppError("Invalid credentials", 401, "INVALID_CREDENTIALS");
+        throw new InvalidCredentialsError("Invalid credentials");
       }
 
       const valid = await passwordHasher.verify(password, user.passwordHash);
 
       if (!valid) {
-        throw new AppError("Invalid credentials", 401, "INVALID_CREDENTIALS");
+        throw new InvalidCredentialsError("Invalid credentials");
       }
 
       const token = tokenService.sign({

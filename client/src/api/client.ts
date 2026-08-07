@@ -33,10 +33,17 @@ export async function postLogin(
 
   let message = response.statusText;
 
+  if (response.status === 401) {
+    return {
+      success: false,
+      message: "Hm.. We just don't know you 🧐",
+    };
+  }
+
   if (!response.ok) {
     try {
       const error = await response.json();
-      message = error.message ?? message;
+      message = error.message || message || "Oh dang! 💥";
     } catch {
       // Keep default statusText
     }
@@ -79,7 +86,7 @@ export async function postRegister(
   if (!response.ok) {
     try {
       const error = await response.json();
-      message = error.message ?? message;
+      message = error.message || message || "Oh dang! 💥";
     } catch {
       // Keep default statusText
     }

@@ -1,5 +1,5 @@
 import type { PasswordHasher } from "../auth/password-hasher.type";
-import { AppError } from "../errors/app-errors";
+import { AppError } from "../errors/app.errors";
 import type { UserRepository } from "../repositories/user.repository.type";
 import type { UserService } from "./user.service.type";
 

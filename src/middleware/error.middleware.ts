@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
-import { AppError } from "../errors/app-errors";
+import { AppError } from "../errors/app.errors";
+import { InvalidCredentialsError } from "../errors/auth.errors";
 
 export function errorMiddleware(err: Error, _req: Request, res: Response) {
   console.error(err);
@@ -7,6 +8,12 @@ export function errorMiddleware(err: Error, _req: Request, res: Response) {
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
       error: err.code,
+      message: err.message,
+    });
+  }
+
+  if (err instanceof InvalidCredentialsError) {
+    return res.status(401).json({
       message: err.message,
     });
   }
