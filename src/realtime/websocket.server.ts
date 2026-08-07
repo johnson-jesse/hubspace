@@ -2,15 +2,18 @@ import crypto from "crypto";
 import type { Server } from "http";
 import { WebSocket, WebSocketServer } from "ws";
 
-import type { TokenService } from "../services/token.type";
-import { presenceManager } from "./presence-manager";
-import { World } from "./world";
+import {
+  directionActorPoint,
+  MessageType,
+  type Message,
+} from "../../shared/world";
 import { userService } from "../container";
+import type { TokenService } from "../services/token.type";
+import { World } from "./world";
 
 export interface ClientSocket extends WebSocket {
-  connectionId: string;
-  userId?: number;
-  email?: string;
+  connectionId?: number;
+  actorId?: number;
 }
 
 export function createWebSocketServer(
@@ -23,28 +26,35 @@ export function createWebSocketServer(
 
   const world = new World();
 
-  function broadcast(record: Record<string, unknown>) {
+  function broadcast(
+    record: Record<string, unknown>,
+    excludeConnectionId?: number,
+  ) {
     const message = JSON.stringify(record);
 
     wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
+      const socket = client as ClientSocket;
+
+      if (
+        socket.readyState === WebSocket.OPEN &&
+        socket.connectionId !== excludeConnectionId
+      ) {
+        socket.send(message);
       }
     });
   }
 
   wss.on("connection", (socket) => {
     const client = socket as ClientSocket;
-    client.connectionId = crypto.randomUUID();
+    client.connectionId = crypto.randomInt(1, 100_000);
 
-    let actorId: string | null = null;
     let authenticated = false;
 
     socket.on("message", async (raw) => {
-      const message = JSON.parse(raw.toString());
+      const message: Message = JSON.parse(raw.toString());
 
       switch (message.type) {
-        case "authenticate":
+        case MessageType.AUTHENTICATE:
           {
             if (authenticated) return;
 
@@ -52,88 +62,73 @@ export function createWebSocketServer(
               const payload = tokenService.verify(message.token);
               const user = await userService.getUserById(payload.userId);
               authenticated = true;
-              actorId = crypto.randomUUID();
-              const actor = world.addActor(actorId, user);
 
-              client.userId = payload.userId;
-              client.email = payload.email;
+              let actor = world.getActorByUserId(user.id);
 
-              presenceManager.add(client.connectionId, {
-                userId: payload.userId,
-                name: user.name,
-                email: payload.email,
-                connectedAt: new Date(),
-              });
+              if (actor) client.actorId = actor.id;
+              else {
+                client.actorId = crypto.randomInt(100_001, 200_000);
+                actor = world.addActor(client.actorId, user);
+
+                // Notify everyone else
+                broadcast(
+                  {
+                    type: MessageType.CONNECT,
+                    actor,
+                  },
+                  client.connectionId,
+                );
+              }
 
               // Send initial state to this client
               socket.send(
                 JSON.stringify({
-                  type: "welcome",
-                  actor,
+                  type: MessageType.WELCOME,
+                  actorId: client.actorId,
                   actors: world.getActors(),
-                  users: presenceManager.getActiveUsers(),
                 }),
               );
-
-              // Notify everyone else
-              broadcast({
-                type: "presence",
-                users: presenceManager.getActiveUsers(),
-              });
-
-              broadcast({
-                type: "actorSpawned",
-                actor,
-              });
             } catch {
               socket.close(1008, "Invalid token");
             }
           }
           break;
 
-        case "actorMoved":
+        case MessageType.MOVING:
           {
-            if (!actorId) {
+            if (!client.actorId) {
               return;
             }
 
-            const actor = world.updateActor(actorId, message.x, message.y);
+            let actor = world.getActor(client.actorId);
+            if (!actor) return;
 
-            if (actor) {
-              broadcast({
-                type: "actorMoved",
-                actor,
-              });
-            }
+            const point = directionActorPoint(message.direction, actor);
+            actor = world.updateActor(client.actorId, point.x, point.y);
+
+            broadcast(
+              {
+                type: MessageType.MOVED,
+                actorId: client.actorId,
+                x: actor?.x,
+                y: actor?.y,
+              },
+              client.connectionId,
+            );
           }
           break;
 
-        case "actorRemoved":
+        case MessageType.COLOR:
           {
-            if (!actorId) {
+            if (!client.actorId) {
               return;
             }
 
-            world.removeActor(actorId);
-
-            broadcast({
-              type: "actorRemoved",
-              id: actorId,
-            });
-          }
-          break;
-
-        case "actorColor":
-          {
-            if (!actorId) {
-              return;
-            }
-
-            const actor = world.updateColor(actorId, message.color);
+            const actor = world.updateColor(client.actorId, message.color);
 
             if (actor) {
               broadcast({
-                type: "actorColor",
+                type: MessageType.COLOR,
                 actor,
               });
             }
@@ -143,24 +138,20 @@ export function createWebSocketServer(
     });
 
     socket.on("close", () => {
-      if (authenticated) {
-        presenceManager.remove(client.connectionId);
+      const client = socket as ClientSocket;
 
-        broadcast({
-          type: "presence",
-          users: presenceManager.getActiveUsers(),
-        });
-      }
+      if (client.actorId !== undefined) {
+        world.removeActor(client.actorId);
 
-      if (actorId) {
-        world.removeActor(actorId);
+        broadcast(
+          {
+            type: MessageType.DISCONNECT,
+            actorId: client.actorId,
+          },
+          client.connectionId,
+        );
 
-        broadcast({
-          type: "actorRemoved",
-          id: actorId,
-        });
-
-        console.log(`${client.email} disconnected`);
+        client.connectionId = undefined;
       }
     });
   });

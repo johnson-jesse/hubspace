@@ -2,9 +2,9 @@ import type {
   PrismaClient,
   User,
 } from "../../generated/prisma/client/client.ts";
+import type { PublicUser } from "../../shared/user.ts";
 import {
   publicUserSelect,
-  type PublicUser,
   type UserRepository,
 } from "./user.repository.type.ts";
 
@@ -42,16 +42,35 @@ export function createUserRepository(prisma: PrismaClient): UserRepository {
         select: publicUserSelect,
       });
     },
-    async updateColor(userId: number, color: string) {
+    async updateColor(id: number, color: string) {
       return prisma.user.update({
         where: {
-          id: userId,
+          id,
         },
         data: {
           color,
         },
         select: publicUserSelect,
       });
+    },
+    async getFriends(id: number) {
+      const me = await this.findUserById(id);
+
+      if (!me) {
+        return { me: null, friends: [] };
+      }
+
+      // TODO for now, return everyone else
+      const friends = await prisma.user.findMany({
+        where: {
+          id: {
+            not: id,
+          },
+        },
+        select: publicUserSelect,
+      });
+
+      return { me, friends };
     },
   };
 }

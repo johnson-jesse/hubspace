@@ -1,18 +1,19 @@
-import type { PublicUser } from "../repositories/model";
-import type { Actor } from "./actor.type";
-import { randomActorColor, randomPosition } from "./helper";
+import { randomColor } from "../../shared/color";
+import type { PublicUser } from "../../shared/user";
+import type { Actor } from "../../shared/world";
+import { randomPosition } from "./helper";
 
 export class World {
-  private actors = new Map<string, Actor>();
+  private actors = new Map<number, Actor>();
 
-  addActor(id: string, user: PublicUser) {
+  addActor(id: number, user: PublicUser) {
     const position = randomPosition();
 
     const actor: Actor = {
       id,
       x: position.x,
       y: position.y,
-      color: user.color || randomActorColor(),
+      color: user.color || randomColor(),
       user,
     };
 
@@ -21,7 +22,7 @@ export class World {
     return actor;
   }
 
-  updateActor(id: string, x: number, y: number) {
+  updateActor(id: number, x: number, y: number) {
     const actor = this.actors.get(id);
 
     if (!actor) {
@@ -34,7 +35,7 @@ export class World {
     return actor;
   }
 
-  updateColor(id: string, color: string) {
+  updateColor(id: number, color: string) {
     const actor = this.actors.get(id);
 
     if (!actor) {
@@ -46,15 +47,21 @@ export class World {
     return actor;
   }
 
-  removeActor(id: string) {
+  removeActor(id: number) {
     this.actors.delete(id);
   }
 
-  getActor(id: string) {
+  getActor(id: number) {
     return this.actors.get(id);
   }
 
   getActors() {
     return Array.from(this.actors.values());
+  }
+
+  getActorByUserId(userId: number) {
+    return Array.from(this.actors.values()).find(
+      (actor) => actor.user.id === userId,
+    );
   }
 }

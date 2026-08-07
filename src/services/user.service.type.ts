@@ -1,4 +1,4 @@
-import type { PublicUser } from "../repositories/model";
+import type { PublicUser, UserFriends } from "../../shared/user";
 
 export interface UserService {
   registerUser(
@@ -8,4 +8,5 @@ export interface UserService {
   ): Promise<PublicUser>;
   getUserById(id: number): Promise<PublicUser>;
   updateColor(id: number, color: string): Promise<PublicUser | null>;
+  getUserFriends(id: number): Promise<UserFriends>;
 }

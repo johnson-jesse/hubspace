@@ -1,6 +1,6 @@
 # Hubspace
 
-A real-time multi-person collaboration space built with **TypeScript**, **Express**, **WebSockets**, **Prisma**, and **SQLite**.
+A real-time multi-person collaboration space built with **TypeScript**, **Express**, **React**, **Vite**, **WebSockets**, **Prisma**, and **SQLite**.
 
 ## Try It Live
 
@@ -18,6 +18,8 @@ The project demonstrates:
 * Password hashing with Argon2
 * JWT-based authentication
 * Express REST API design
+* React frontend development
+* Vite frontend tooling
 * WebSocket realtime communication
 * Dependency injection
 * Layered backend architecture
@@ -26,44 +28,47 @@ The project demonstrates:
 * Integration testing with Mocha, Chai, and Supertest
 * Production deployment
 
-## Application Architecture
+---
+
+# Application Architecture
+
+Hubspace separates the frontend, HTTP API, persistence layer, and realtime communication systems.
+
+```
+                    React + Vite Client
+                           |
+                           | HTTP / WebSocket
+                           v
+                    Express Application
+                           |
+              +------------+------------+
+              |                         |
+              v                         v
+          REST API              WebSocket Server
+              |                         |
+              v                         v
+        Controllers              Actor Management
+              |                         |
+              v                         v
+          Services              Realtime State
+              |                         |
+              v                         v
+        Repositories             Broadcasting
+              |
+              v
+        Prisma ORM
+              |
+              v
+        SQLite Database
+```
+
+---
+
+# Backend Architecture
 
 Hubspace uses a layered backend architecture designed to separate HTTP concerns, business logic, persistence, and realtime communication.
 
-```
-Client
- |
- | HTTP / WebSocket
- v
-Routes
- |
- v
-Controllers
- |
- v
-Services
- |
- v
-Repositories
- |
- v
-Prisma ORM
- |
- v
-SQLite Database
-
-
-             WebSocket Server
-                    |
-                    v
-             Realtime State
-             Actor Management
-             Broadcasting
-```
-
-## Backend Layers
-
-### Routes
+## Routes
 
 Responsible for defining application endpoints and connecting requests to controllers.
 
@@ -77,7 +82,7 @@ Routes do not contain business logic.
 
 ---
 
-### Controllers
+## Controllers
 
 Responsible for handling HTTP requests and responses.
 
@@ -92,7 +97,7 @@ Controllers remain thin and delegate work to services.
 
 ---
 
-### Services
+## Services
 
 Contains the core application logic.
 
@@ -108,7 +113,7 @@ Services coordinate operations without knowing HTTP details.
 
 ---
 
-### Repositories
+## Repositories
 
 Responsible for database access.
 
@@ -123,7 +128,7 @@ Repositories isolate persistence details from the rest of the application.
 
 ---
 
-### Database Layer
+## Database Layer
 
 Hubspace uses Prisma ORM with SQLite for persistent storage.
 
@@ -140,7 +145,7 @@ Prisma-generated types are used as the source of truth for database models.
 
 ---
 
-## Realtime Layer
+# Realtime Layer
 
 The realtime system runs independently from the REST API flow.
 
@@ -149,6 +154,7 @@ Responsibilities:
 * Maintain WebSocket connections
 * Authenticate connected clients
 * Track active actors
+* Manage realtime world state
 * Broadcast world updates
 * Synchronize connected users
 
@@ -156,7 +162,66 @@ The WebSocket layer shares application services while maintaining its own realti
 
 ---
 
-## Dependency Injection
+# Frontend Architecture
+
+The frontend is built with React and Vite.
+
+Responsibilities:
+
+* User interface rendering
+* Authentication state
+* WebSocket client management
+* Realtime actor rendering
+* User interaction handling
+
+Development uses Vite's development server with proxy support.
+
+Production uses the Vite-generated static build served through Express.
+
+---
+
+# Development Proxy
+
+During development, Vite runs separately from Express.
+
+```
+Browser
+   |
+   | http://localhost:5173
+   |
+   v
+Vite Development Server
+   |
+   | proxy /api and /ws
+   |
+   v
+Express Server
+   |
+   | http://localhost:3000
+```
+
+The Vite proxy only applies during development.
+
+Production uses a single Express server:
+
+```
+Browser
+   |
+   | http://localhost:3000
+   |
+   v
+Express
+   |
+   +-- React static files
+   |
+   +-- REST API
+   |
+   +-- WebSocket server
+```
+
+---
+
+# Dependency Injection
 
 Application dependencies are created externally and passed into application layers.
 
@@ -171,7 +236,7 @@ This keeps components loosely coupled and allows production and test environment
 
 ---
 
-## Testing
+# Testing
 
 Hubspace uses:
 
@@ -198,9 +263,9 @@ npm run test
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-### Backend
+## Backend
 
 * TypeScript
 * Node.js
@@ -211,25 +276,26 @@ npm run test
 * Argon2 password hashing
 * JWT authentication
 
-### Frontend
+## Frontend
 
-* HTML
-* JavaScript
+* React
+* Vite
+* TypeScript
 * Canvas rendering
 
-### Testing
+## Testing
 
 * Mocha
 * Chai
 * Supertest
 
-### Deployment
+## Deployment
 
 * Render Web Service
 
 ---
 
-## Project Goals
+# Project Goals
 
 Hubspace is a learning project focused on building a complete realtime application from the ground up.
 
@@ -240,6 +306,7 @@ The project explores:
 * Database design
 * ORM usage
 * WebSocket communication
+* Frontend integration
 * Testing strategies
 * Dependency injection
 * Production deployment
@@ -255,17 +322,23 @@ The project explores:
 
 ---
 
-## Installation
+# Installation
 
-Install dependencies:
+Install backend dependencies:
 
 ```
 npm install
 ```
 
+Install frontend dependencies:
+
+```
+npm --prefix client install
+```
+
 ---
 
-## Setup
+# Setup
 
 Create environment files and required directories:
 
@@ -283,7 +356,7 @@ Existing files are preserved.
 
 ---
 
-## Generate Prisma Client
+# Generate Prisma Client
 
 ```
 npm run db:generate
@@ -291,7 +364,7 @@ npm run db:generate
 
 ---
 
-## Database Setup
+# Database Setup
 
 Apply migrations:
 
@@ -315,25 +388,86 @@ data/hubspace-test.sqlite
 
 ---
 
-## Running the Application
+# Running the Application
 
-Development mode:
+Hubspace requires both the backend and frontend during development.
+
+## Start Backend
+
+From the project root:
 
 ```
 npm run dev
 ```
 
----
-
-## Running Tests
+The backend starts on:
 
 ```
-npm run test
+http://localhost:3000
 ```
 
 ---
 
-## Database Commands
+## Start Frontend
+
+From the project root:
+
+```
+npm run dev:fe
+```
+
+This runs:
+
+```
+npm --prefix client run dev
+```
+
+The Vite development server starts on:
+
+```
+http://localhost:5173
+```
+
+Vite proxies:
+
+```
+/api -> http://localhost:3000
+/ws  -> ws://localhost:3000
+```
+
+---
+
+# Production Build
+
+Build the frontend:
+
+```
+npm run build:fe
+```
+
+This creates:
+
+```
+client/dist
+```
+
+The Express server serves the production frontend build.
+
+Start production server:
+
+```
+npm start
+```
+
+Open:
+
+```
+http://localhost:3000
+```
+
+---
+
+# Database Commands
 
 Generate Prisma client:
 
@@ -361,7 +495,7 @@ npm run db:check
 
 ---
 
-## Environment Variables
+# Environment Variables
 
 Example development environment:
 
@@ -381,32 +515,43 @@ PORT=3001
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```
-src
+hubspace
  |
- ├── auth
- ├── controllers
- ├── middleware
- ├── repositories
- ├── services
- ├── db
- │    ├── migrations
- │    └── prisma.ts
- ├── websocket
- └── app.ts
-
-
-tests
+ ├── src
+ │    |
+ │    ├── auth
+ │    ├── controllers
+ │    ├── middleware
+ │    ├── repositories
+ │    ├── services
+ │    ├── db
+ │    │    ├── migrations
+ │    │    └── prisma.ts
+ │    ├── websocket
+ │    ├── app.ts
+ │    └── server.ts
  |
- ├── auth
- ├── repositories
- └── helpers
+ ├── client
+ │    |
+ │    ├── src
+ │    ├── public
+ │    ├── vite.config.ts
+ │    └── package.json
+ |
+ ├── tests
+ │    |
+ │    ├── auth
+ │    ├── repositories
+ │    └── helpers
+ |
+ └── prisma
 ```
 
 ---
 
-## License
+# License
 
 MIT

@@ -36,4 +36,10 @@ PORT=3001
 `,
 );
 
+createFile(
+  "/client/.env",
+  `VITE_WS_URL=localhost:3000"
+`,
+);
+
 console.log("Setup complete.");

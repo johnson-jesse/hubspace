@@ -21,12 +21,17 @@ export function createUserController(dependencies: AppDependencies) {
         throw new Error("User not found");
       }
 
-      res.json({
-        user: {
-          id: user.id,
-          email: user.email,
-        },
-      });
+      res.json(user);
+    },
+
+    async getFriends(req: Request, res: Response) {
+      const friends = await dependencies.userService.getUserFriends(
+        req.user!.userId,
+      );
+
+      if (!friends) res.json([]);
+
+      res.json(friends);
     },
   };
 }
